@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using Exceptions;
+using Enums;
 
 public partial class Login : System.Web.UI.Page
 {
@@ -25,10 +26,11 @@ public partial class Login : System.Web.UI.Page
     {
         string username = TextBox1.Text;
         string password = TextBox2.Text;
+        int role = 2;
         try
         {
             con.Open();
-            cmd = new SqlCommand("select username,password from Users",con);
+            cmd = new SqlCommand("select username,password,role from users",con);
             reader = cmd.ExecuteReader();
             bool userFound = false, passwordFound = false;
             while (reader.Read())
@@ -37,12 +39,22 @@ public partial class Login : System.Web.UI.Page
                 {
                     userFound = true;
                     if (password == reader[1].ToString()) passwordFound = true;
+                    role = (int)reader[2];
+                    break;
                 }
                 
             }
             if (!userFound) throw new Exceptions.UserNameIsWrongException("User Name not found!!");
             if (!passwordFound) throw new Exceptions.PasswordIsWrongException("Password is incorrect!!");
-            Response.Redirect("home.aspx");
+            switch (role)
+            {
+                case (int) Enums.Roles.admin: Response.Redirect("admin/home.aspx");
+                    break;
+                case (int) Enums.Roles.incharge: Response.Redirect("incharge/home.aspx");
+                    break;
+                case (int) Enums.Roles.faculty : Response.Redirect("faculty/home.aspx");
+                    break;
+            }
         }
         catch(UserNameIsWrongException err)
         {
