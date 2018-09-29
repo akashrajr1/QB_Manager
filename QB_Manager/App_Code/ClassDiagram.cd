@@ -19,12 +19,12 @@
     <TypeIdentifier />
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Enums.Roles" Collapsed="true">
-    <Position X="4.75" Y="5.25" Width="1.25" />
+  <Enum Name="Enums.Roles" Collapsed="true">
+    <Position X="4.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AEAAAAAAgAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>App_Code\Enums.cs</FileName>
     </TypeIdentifier>
-  </Class>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

@@ -12,4 +12,9 @@ namespace Enums
     {
         admin, incharge,faculty
     }
+
+    public enum AdminPower
+    {
+        CreateNewUser
+    }
 }

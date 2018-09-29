@@ -1,0 +1,53 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="home.master.cs" Inherits="home" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+</head>
+<body>
+
+    <form id="form1" runat="server">
+        <p>
+            Welcome
+            <asp:ContentPlaceHolder ID="User" runat="server">
+                &nbsp;
+            </asp:ContentPlaceHolder>
+&nbsp;!!</p>
+        <p>
+            <asp:ContentPlaceHolder ID="Body" runat="server">
+            </asp:ContentPlaceHolder>
+        </p>
+    </form>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;</p>
+    <p style="margin-left: 400px">
+        Desgined by Akash &amp; Prakhar</p>
+
+</body>
+</html>
