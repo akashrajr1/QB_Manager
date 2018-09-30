@@ -17,4 +17,29 @@ namespace Exceptions
     {
         public PasswordIsWrongException(string msg) : base(msg) { }
     }
+
+    public class NewUserNotCreated : Exception
+    {
+        public NewUserNotCreated(string msg) : base(msg) { }
+    }
+
+    public class PasswordNotChanged : Exception
+    {
+        public PasswordNotChanged(string msg) : base(msg) { }
+    }
+
+    public class RoleNotChanged : Exception
+    {
+        public RoleNotChanged(string msg) : base(msg) { }
+    }
+
+    public class UserNotBlocked : Exception
+    {
+        public UserNotBlocked(string msg) : base(msg) { }
+    }
+
+    public class UserNotDeleted : Exception
+    {
+        public UserNotDeleted(string msg) : base(msg) { }
+    }
 }

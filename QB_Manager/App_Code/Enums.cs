@@ -10,11 +10,11 @@ namespace Enums
 {
     public enum Roles
     {
-        admin, incharge,faculty
+        Blocked=-1, Admin, Incharge, Faculty
     }
 
     public enum AdminPower
     {
-        CreateNewUser
+        CreateNewUser, DisplayAllUsers, ChangeUserPassword, ChangeUserRole, BlockUser, DeleteUser
     }
 }

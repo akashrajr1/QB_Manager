@@ -10,6 +10,7 @@ using System.Data.Sql;
 using System.Data.SqlClient;
 using Exceptions;
 using Enums;
+using Methods;
 
 public partial class Login : System.Web.UI.Page
 {
@@ -44,25 +45,25 @@ public partial class Login : System.Web.UI.Page
                 }
                 
             }
-            if (!userFound) throw new Exceptions.UserNameIsWrongException("User Name not found!!");
-            if (!passwordFound) throw new Exceptions.PasswordIsWrongException("Password is incorrect!!");
-            switch (role)
+            if (!userFound) throw new UserNameIsWrongException("User Name not found!!");
+            if (!passwordFound) throw new PasswordIsWrongException("Password is incorrect!!");
+            switch ((Roles)role)
             {
-                case (int) Enums.Roles.admin: Response.Redirect("admin/home.aspx");
+                case Roles.Admin: Response.Redirect("admin/home.aspx");
                     break;
-                case (int) Enums.Roles.incharge: Response.Redirect("incharge/home.aspx");
+                case Roles.Incharge: Response.Redirect("incharge/home.aspx");
                     break;
-                case (int) Enums.Roles.faculty : Response.Redirect("faculty/home.aspx");
+                case Roles.Faculty : Response.Redirect("faculty/home.aspx");
                     break;
             }
         }
         catch(UserNameIsWrongException err)
         {
-            Response.Write(@"<script language='javascript'>alert('" + err.Message + " .');</script>");
+            Alert.Generate(this,err.Message);
         }
         catch (PasswordIsWrongException err)
         {
-            Response.Write(@"<script language='javascript'>alert('" + err.Message + " .');</script>");
+            Alert.Generate(this, err.Message);
         }
         finally
         {
