@@ -42,4 +42,9 @@ namespace Exceptions
     {
         public UserNotDeleted(string msg) : base(msg) { }
     }
+
+    public class QuestionNotUpdated : Exception
+    {
+        public QuestionNotUpdated(string msg) : base(msg) { }
+    }
 }

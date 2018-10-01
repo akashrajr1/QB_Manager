@@ -27,8 +27,8 @@
     <asp:Panel ID="Panel2" runat="server" Width="190px" Visible="False">
         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="username" DataSourceID="SqlDataSource1" AllowPaging="True" AllowSorting="True" PageSize="5" EnableSortingAndPagingCallbacks="True">
             <Columns>
-                <asp:BoundField DataField="username" HeaderText="username" ReadOnly="True" SortExpression="username" />
-                <asp:BoundField DataField="role" HeaderText="role" SortExpression="role" />
+                <asp:BoundField DataField="username" HeaderText="Username" ReadOnly="True" SortExpression="username" />
+                <asp:BoundField DataField="role" HeaderText="Role" SortExpression="role" />
             </Columns>
         </asp:GridView>
         <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:QB_ManagerConnectionString %>" SelectCommand="SELECT [username], [role] FROM [Users] WHERE ([role] &lt;&gt; @role)">

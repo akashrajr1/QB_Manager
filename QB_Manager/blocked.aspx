@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="home.aspx.cs" Inherits="home" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="blocked.aspx.cs" Inherits="blocked" %>
 
 <!DOCTYPE html>
 
@@ -9,6 +9,7 @@
 <body>
     <form id="form1" runat="server">
         <div>
+            <h1> You are Blocked!!!</h1>
         </div>
     </form>
 </body>

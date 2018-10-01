@@ -55,6 +55,8 @@ public partial class Login : System.Web.UI.Page
                     break;
                 case Roles.Faculty : Response.Redirect("faculty/home.aspx");
                     break;
+                case Roles.Blocked: Response.Redirect("blocked.aspx");
+                    break;
             }
         }
         catch(UserNameIsWrongException err)

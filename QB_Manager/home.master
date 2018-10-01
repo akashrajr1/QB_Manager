@@ -5,6 +5,12 @@
 <html>
 <head runat="server">
     <title></title>
+    <style type="text/css">
+        .auto-style1 {
+            width: 369px;
+            height: 190px;
+        }
+    </style>
 </head>
 <body>
 
@@ -20,33 +26,10 @@
             </asp:ContentPlaceHolder>
         </p>
     </form>
+
     <p>
-        &nbsp;</p>
+        <img alt="Bats" class="auto-style1" src="C:/Users/akash/Desktop/QB_Manager/QB_Manager/images/bat.jpg" /></p>
     <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p>
-        &nbsp;</p>
-    <p style="margin-left: 400px">
         Desgined by Akash &amp; Prakhar</p>
 
 </body>
