@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/home.master" AutoEventWireup="true" CodeFile="home.aspx.cs" Inherits="_Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="User" Runat="Server">
+    <asp:Label ID="Label1" runat="server"></asp:Label>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" Runat="Server">
     Select Operation to Perform:<asp:RadioButtonList ID="RadioButtonList1" runat="server" AutoPostBack="true" OnSelectedIndexChanged="RadioButtonList1_SelectedIndexChanged">
@@ -45,7 +46,8 @@
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Submit" />
     </asp:Panel>
     <asp:Panel ID="Panel3" runat="server">
-        MCQs:<br />
+        MCQs:
+        <br />
         <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="false">
             <Columns>
                 <asp:BoundField DataField="question" HeaderText="Questions"/>
@@ -56,8 +58,9 @@
                 <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks"/>
             </Columns>
         </asp:GridView>
+        Questions:
         <br />
-        Questions:<asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false">
+        <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false">
             <Columns>
                 <asp:BoundField DataField="question" HeaderText="Questions"/>
                 <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks" />

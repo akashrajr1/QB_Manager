@@ -47,4 +47,9 @@ namespace Exceptions
     {
         public QuestionNotUpdated(string msg) : base(msg) { }
     }
+
+    public class UserNotFound : Exception
+    {
+        public UserNotFound(string msg) : base(msg) { }
+    }
 }

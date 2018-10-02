@@ -17,6 +17,20 @@ public partial class admin_home : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        try
+        {
+            HttpCookie cookie = Request.Cookies["userdata"];
+            string username = Server.UrlDecode(Request.QueryString["Username"]);
+            if (cookie == null || username!=cookie["username"])
+                throw new UserNotFound("Invalid User!!");
+            else
+                Session["username"] = cookie["username"];
+        }
+        catch(UserNotFound err)
+        {
+            Response.Redirect("http://localhost:60561/404.aspx?Error="+Server.UrlEncode(err.Message));
+        }
+        Label1.Text = (string)Session["username"];
     }
 
     public void SetToFalse()

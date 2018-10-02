@@ -16,7 +16,24 @@ public partial class _Default : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        try
+        {
+            HttpCookie cookie = Request.Cookies["userdata"];
+            string username = Server.UrlDecode(Request.QueryString["Username"]);
+            if (cookie == null || username != cookie["username"])
+                throw new UserNotFound("Invalid User!!");
+            else
+            {
+                Session["username"] = cookie["username"];
+                Session["uid"] = cookie["uid"];
+                Session["role"] = cookie["role"];
+            }
+        }
+        catch (UserNotFound err)
+        {
+            Response.Redirect("http://localhost:60561/404.aspx?Error=" + Server.UrlEncode(err.Message));
+        }
+        Label1.Text = (string)Session["username"];
     }
 
     public void SetToFalse()
@@ -96,6 +113,7 @@ public partial class _Default : System.Web.UI.Page
         string[] options = { TextBox2.Text, TextBox3.Text, TextBox4.Text, TextBox5.Text };
         string marks = TextBox6.Text;
         int ismcq=0;
+        string uid = Session["uid"].ToString();
         if (CheckBoxList1.SelectedIndex == 0) ismcq = 1;
 
         try
@@ -103,20 +121,21 @@ public partial class _Default : System.Web.UI.Page
             con.Open();
             if (ismcq == 1)
             {
-                cmd = new SqlCommand("insert into questions (ismcq,question,optiona,optionb,optionc,optiond,marks) values(1,@question,@optiona,@optionb,@optionc,@optiond,@marks)",con);
+                cmd = new SqlCommand("insert into questions (ismcq,question,optiona,optionb,optionc,optiond,marks,uid) values(1,@question,@optiona,@optionb,@optionc,@optiond,@marks,@uid)",con);
                 cmd.Parameters.AddWithValue("@question", question);
                 cmd.Parameters.AddWithValue("@optiona", options[0]);
                 cmd.Parameters.AddWithValue("@optionb", options[1]);
                 cmd.Parameters.AddWithValue("@optionc", options[2]);
                 cmd.Parameters.AddWithValue("@optiond", options[3]);
                 cmd.Parameters.AddWithValue("@marks", marks);
-
+                cmd.Parameters.AddWithValue("@uid", uid);
             }
             else
             {
-                cmd = new SqlCommand("insert into questions (ismcq,question,marks) values(0,@question,@marks)",con);
+                cmd = new SqlCommand("insert into questions (ismcq,question,marks,uid) values(0,@question,@marks,@uid)",con);
                 cmd.Parameters.AddWithValue("@question", question);
                 cmd.Parameters.AddWithValue("@marks", marks);
+                cmd.Parameters.AddWithValue("@uid", uid);
             }
             int flag = cmd.ExecuteNonQuery();
             if (flag !=1)
@@ -133,21 +152,25 @@ public partial class _Default : System.Web.UI.Page
     }
 
     public void UpdateGridView()
-    {
-            con.Open();
-            cmd = new SqlCommand("select question,marks from questions where ismcq=0",con);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            con.Close();
-            GridView1.DataSource = ds;
-            GridView1.DataBind();
+    {   
+        string uid = Session["uid"].ToString();
+        con.Open();
+        cmd = new SqlCommand("select question,marks from questions where ismcq=0 and uid=@uid",con);
+        cmd.Parameters.AddWithValue("@uid", uid);
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        con.Close();
+        GridView1.DataSource = ds;
+        GridView1.DataBind();
     }
 
     public void UpdateGridViewMcqs()
     {
+        string uid = Session["uid"].ToString();
         con.Open();
-        cmd = new SqlCommand("select question,marks,optiona,optionb,optionc,optiond from questions where ismcq=1", con);
+        cmd = new SqlCommand("select question,marks,optiona,optionb,optionc,optiond from questions where ismcq=1 and uid=@uid", con);
+        cmd.Parameters.AddWithValue("@uid", uid);
         SqlDataAdapter da = new SqlDataAdapter(cmd);
         DataSet ds = new DataSet();
         da.Fill(ds);
