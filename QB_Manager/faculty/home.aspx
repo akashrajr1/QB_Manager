@@ -44,6 +44,26 @@
         <br />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Submit" />
     </asp:Panel>
+    <asp:Panel ID="Panel3" runat="server">
+        MCQs:<br />
+        <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="false">
+            <Columns>
+                <asp:BoundField DataField="question" HeaderText="Questions"/>
+                <asp:BoundField DataField="optiona" HeaderText="Option A"/>
+                <asp:BoundField DataField="optionb" HeaderText="Option B"/>
+                <asp:BoundField DataField="optionc" HeaderText="Option C"/>
+                <asp:BoundField DataField="optiond" HeaderText="Option D"/>
+                <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks"/>
+            </Columns>
+        </asp:GridView>
+        <br />
+        Questions:<asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false">
+            <Columns>
+                <asp:BoundField DataField="question" HeaderText="Questions"/>
+                <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks" />
+            </Columns>
+        </asp:GridView>
+    </asp:Panel>
 &nbsp;
 
 </asp:Content>

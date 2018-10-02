@@ -17,4 +17,9 @@ namespace Enums
     {
         CreateNewUser, DisplayAllUsers, ChangeUserPassword, ChangeUserRole, BlockUser, DeleteUser
     }
+
+    public enum FacultyPower
+    {
+        CreateNewQuestion, DisplayAllQuestions
+    }
 }

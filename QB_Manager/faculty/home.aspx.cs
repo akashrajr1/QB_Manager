@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Web.Configuration;
+using Enums;
 using Exceptions;
 using Methods;
 
@@ -22,14 +23,23 @@ public partial class _Default : System.Web.UI.Page
     {
         Panel1.Visible = false;
         Panel2.Visible = false;
+        Panel3.Visible = false;
     }
 
     protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (RadioButtonList1.SelectedIndex == 0)
-            Panel1.Visible = true;
-        else
-            SetToFalse();
+        SetToFalse();
+        switch ((FacultyPower)RadioButtonList1.SelectedIndex)
+        {
+            case FacultyPower.CreateNewQuestion:
+                Panel1.Visible = true;
+                break;
+            case FacultyPower.DisplayAllQuestions:
+                Panel3.Visible = true;
+                UpdateGridView();
+                UpdateGridViewMcqs();
+                break;
+        }
     }
 
     protected void CheckBoxList1_SelectedIndexChanged(object sender, EventArgs e)
@@ -120,5 +130,29 @@ public partial class _Default : System.Web.UI.Page
             Alert.Generate(this,err.Message);
         }
         finally { con.Close(); }
+    }
+
+    public void UpdateGridView()
+    {
+            con.Open();
+            cmd = new SqlCommand("select question,marks from questions where ismcq=0",con);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            con.Close();
+            GridView1.DataSource = ds;
+            GridView1.DataBind();
+    }
+
+    public void UpdateGridViewMcqs()
+    {
+        con.Open();
+        cmd = new SqlCommand("select question,marks,optiona,optionb,optionc,optiond from questions where ismcq=1", con);
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        con.Close();
+        GridView2.DataSource = ds;
+        GridView2.DataBind();
     }
 }
