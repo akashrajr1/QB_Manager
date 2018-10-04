@@ -17,10 +17,9 @@
     <form id="form1" runat="server">
         <p>
             Welcome
-            <asp:ContentPlaceHolder ID="User" runat="server">
-                &nbsp;
-            </asp:ContentPlaceHolder>
-&nbsp;!!</p>
+            <asp:Label ID="Label1" runat="server"></asp:Label>
+            !!<asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Logout" />
+        </p>
         <p>
             <asp:ContentPlaceHolder ID="Body" runat="server">
             </asp:ContentPlaceHolder>

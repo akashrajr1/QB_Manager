@@ -51,7 +51,7 @@ public partial class Login : System.Web.UI.Page
             if (!passwordFound) throw new PasswordIsWrongException("Password is incorrect!!");
 
             HttpCookie cookie = new HttpCookie("userdata");
-            cookie["username"] = username;
+            cookie["username"] = username; Session["username"] = username;
             cookie["role"] = role.ToString();
             cookie["uid"] = uid.ToString();
             Response.Cookies.Add(cookie);

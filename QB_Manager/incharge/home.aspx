@@ -1,8 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/home.master" AutoEventWireup="true" CodeFile="home.aspx.cs" Inherits="incharge_home" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="User" Runat="Server">
-    <asp:Label ID="Label1" runat="server"></asp:Label>
-</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" Runat="Server">
     <asp:RadioButtonList ID="RadioButtonList1" runat="server" AutoPostBack="true" OnSelectedIndexChanged="RadioButtonList1_SelectedIndexChanged">
         <asp:ListItem Value="0">Choose Final Questions</asp:ListItem>

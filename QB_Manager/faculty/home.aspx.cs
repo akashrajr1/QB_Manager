@@ -20,11 +20,10 @@ public partial class _Default : System.Web.UI.Page
         {
             HttpCookie cookie = Request.Cookies["userdata"];
             string username = Server.UrlDecode(Request.QueryString["Username"]);
-            if (cookie == null || username != cookie["username"])
+            if (Session["username"] == null || username != Session["username"].ToString())
                 throw new UserNotFound("Invalid User!!");
             else
             {
-                Session["username"] = cookie["username"];
                 Session["uid"] = cookie["uid"];
                 Session["role"] = cookie["role"];
             }
@@ -33,7 +32,6 @@ public partial class _Default : System.Web.UI.Page
         {
             Response.Redirect("http://localhost:60561/404.aspx?Error=" + Server.UrlEncode(err.Message));
         }
-        Label1.Text = (string)Session["username"];
     }
 
     public void SetToFalse()
