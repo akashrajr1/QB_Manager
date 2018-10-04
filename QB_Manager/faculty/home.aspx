@@ -41,7 +41,7 @@
         Enter Marks: 
         <asp:TextBox ID="TextBox6" runat="server"></asp:TextBox>
         <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="TextBox6" ErrorMessage="You must Enter Marks!!"></asp:RequiredFieldValidator>
-        <asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="Enter a proper number!!" MinimumValue="1" Type="Integer" ControlToValidate="TextBox6" MaximumValue="100"></asp:RangeValidator>
+        <asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="Enter a proper number!!" MinimumValue="1" Type="Double" ControlToValidate="TextBox6" MaximumValue="100"></asp:RangeValidator>
         <br />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Submit" />
     </asp:Panel>

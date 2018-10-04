@@ -22,4 +22,9 @@ namespace Enums
     {
         CreateNewQuestion, DisplayAllQuestions
     }
+
+    public enum InChargePower
+    {
+        ChooseFinalQuestions, ViewQuestionPaper
+    }
 }
