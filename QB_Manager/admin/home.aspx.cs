@@ -51,21 +51,27 @@ public partial class admin_home : System.Web.UI.Page
         switch ( (AdminPower) Convert.ToInt32(RadioButtonList1.SelectedValue))
         {
             case AdminPower.CreateNewUser:
+                PopulateSubjects();
                 Panel1.Visible = true;
                 break;
             case AdminPower.DisplayAllUsers:
+                PopulateUserDetails();
                 Panel2.Visible = true;
                 break;
             case AdminPower.ChangeUserPassword:
+                PopulateUserDropDownList1();
                 Panel3.Visible = true;
                 break;
             case AdminPower.ChangeUserRole:
+                PopulateUserDropDownList2(UserDropDownList2);
                 Panel4.Visible = true;
                 break;
             case AdminPower.BlockUser:
+                PopulateUserDropDownList3();
                 Panel5.Visible = true;
                 break;
             case AdminPower.DeleteUser:
+                PopulateUserDropDownList2(UserDropDownList4);
                 Panel6.Visible = true;
                 break;
         }
@@ -74,6 +80,30 @@ public partial class admin_home : System.Web.UI.Page
     SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["QB_Manager"].ConnectionString);
     SqlCommand cmd;
     SqlDataReader reader;
+
+    public void PopulateSubjects()
+    {
+        con.Open();
+        cmd = new SqlCommand("select subject,branch,semester,subid from subjects join branch on branch.branchid=subjects.branchid", con);
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        con.Close();
+        SubjectGridView.DataSource = ds;
+        SubjectGridView.DataBind();
+    }
+
+    public void PopulateUserDetails()
+    {
+        con.Open();
+        cmd = new SqlCommand("select username,Roles.role from users join roles on users.role=roles.roleid where roles.roleid <> 0", con);
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        con.Close();
+        UserGridView.DataSource = ds;
+        UserGridView.DataBind();
+    }
 
     protected void Button1_Click(object sender, EventArgs e)
     {
@@ -89,14 +119,49 @@ public partial class admin_home : System.Web.UI.Page
             cmd.Parameters.AddWithValue("@username", username);
             cmd.Parameters.AddWithValue("@password", password);
             cmd.Parameters.AddWithValue("@role", role.ToString());
-            int flag=cmd.ExecuteNonQuery();
+
+            int count = 0;
+            foreach (GridViewRow row in SubjectGridView.Rows)
+            {
+                CheckBox box = (CheckBox)row.Cells[1].FindControl("CheckBox1");
+                if (box.Checked == true)
+                    count++;
+            }
+            if (count == 0)
+                throw new NoSubjectChecked("Please Select A Subject!!");
+
+            int flag = cmd.ExecuteNonQuery();
+            cmd = new SqlCommand("select uid from users where username=@username", con);
+            cmd.Parameters.AddWithValue("@username", username);
+            reader = cmd.ExecuteReader();
+            string uid = "";
+            while (reader.Read())
+                uid = ((int)reader[0]).ToString();
+            con.Close();
+            con.Open();
+            foreach (GridViewRow row in SubjectGridView.Rows)
+            {
+                CheckBox box = (CheckBox)row.Cells[1].FindControl("CheckBox1");
+                if (box.Checked == true)
+                {
+                    cmd = new SqlCommand("insert into Teaches(uid,subid) values(@uid,@subid)", con);
+                    cmd.Parameters.AddWithValue("@uid", uid);
+                    cmd.Parameters.AddWithValue("@subid", row.Cells[0].Text);
+                    flag=cmd.ExecuteNonQuery();
+                }
+            }
             if (flag != 0)
-                Alert.Generate(this,"New User Created!!");
+                Alert.Generate(this, "New User Created!!");
             else
                 throw new NewUserNotCreated("User Not Created");
 
         }
-        catch (NewUserNotCreated err) {
+        catch (NewUserNotCreated err)
+        {
+            Alert.Generate(this, err.Message);
+        }
+        catch (NoSubjectChecked err)
+        {
             Alert.Generate(this, err.Message);
         }
         catch (SqlException err)
@@ -108,7 +173,7 @@ public partial class admin_home : System.Web.UI.Page
 
     protected void Button2_Click(object sender, EventArgs e)
     {
-        string username = DropDownList2.SelectedValue;
+        string username = UserDropDownList.SelectedValue;
         string password = TextBox3.Text;
         try
         {
@@ -129,9 +194,9 @@ public partial class admin_home : System.Web.UI.Page
         finally { con.Close(); }
     }
 
-    protected void DropDownList3_SelectedIndexChanged(object sender, EventArgs e)
+    protected void UserDropDownList_SelectedIndexChanged(object sender, EventArgs e)
     {
-        string username = DropDownList3.SelectedValue;
+        string username = UserDropDownList2.SelectedValue;
         try
         {
             con.Open();
@@ -151,7 +216,7 @@ public partial class admin_home : System.Web.UI.Page
 
     protected void Button3_Click(object sender, EventArgs e)
     {
-        string username = DropDownList3.SelectedValue;
+        string username = UserDropDownList2.SelectedValue;
         int role = DropDownList4.SelectedIndex+1;
         try
         {
@@ -177,7 +242,7 @@ public partial class admin_home : System.Web.UI.Page
 
     protected void Button4_Click(object sender, EventArgs e)
     {
-        string username = DropDownList5.SelectedValue;
+        string username = UserDropDownList3.SelectedValue;
         try
         {
             con.Open();
@@ -197,13 +262,23 @@ public partial class admin_home : System.Web.UI.Page
         finally { con.Close(); }
     }
 
-
     protected void Button5_Click(object sender, EventArgs e)
     {
-        string username = DropDownList6.SelectedValue;
+        string username = UserDropDownList4.SelectedValue;
         try
         {
             con.Open();
+            cmd = new SqlCommand("select uid from users where username=@username", con);
+            cmd.Parameters.AddWithValue("@username", username);
+            reader = cmd.ExecuteReader();
+            string uid = "";
+            while (reader.Read())
+                uid = ((int)reader[0]).ToString();
+            reader.Close();
+            cmd = new SqlCommand("delete from teaches where uid=@uid", con);
+            cmd.Parameters.AddWithValue("@uid", uid);
+            cmd.ExecuteNonQuery();
+
             cmd = new SqlCommand("delete from users where username=@username", con);
             cmd.Parameters.AddWithValue("@username", username);
             int x = cmd.ExecuteNonQuery();
@@ -217,5 +292,53 @@ public partial class admin_home : System.Web.UI.Page
             Alert.Generate(this, err.Message);
         }
         finally { con.Close(); }
+    }
+
+    protected void SubjectGridViewPageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        SubjectGridView.PageIndex = e.NewPageIndex;
+        PopulateSubjects();
+    }
+
+    protected void UserGridViewPageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        UserGridView.PageIndex = e.NewPageIndex;
+        PopulateUserDetails();
+    }
+
+    public void PopulateUserDropDownList1()
+    {
+        con.Open();
+        cmd = new SqlCommand("select username from users", con);
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        UserDropDownList.DataSource = ds;
+        UserDropDownList.DataTextField = "username";
+        UserDropDownList.DataBind();
+    }
+
+    public void PopulateUserDropDownList2(DropDownList list)
+    {
+        con.Open();
+        cmd = new SqlCommand("select username from users where role<>0", con);
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        list.DataSource = ds;
+        list.DataTextField = "username";
+        list.DataBind();
+    }
+
+    public void PopulateUserDropDownList3()
+    {
+        con.Open();
+        cmd = new SqlCommand("select username from users where role>0", con);
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        UserDropDownList3.DataSource = ds;
+        UserDropDownList3.DataTextField = "username";
+        UserDropDownList3.DataBind();
     }
 }
