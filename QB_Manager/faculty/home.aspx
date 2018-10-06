@@ -8,7 +8,14 @@
         <asp:ListItem Value="2">None</asp:ListItem>
     </asp:RadioButtonList>
     <asp:Panel ID="Panel1" runat="server" Visible="False">
-        Enter Question:
+        Subject:
+        <asp:DropDownList ID="SubjectsDropDownList" runat="server" AutoPostBack="true" OnSelectedIndexChanged="SubjectsDropDownList_SelectedIndexChanged">
+        </asp:DropDownList>
+        &nbsp;Semester:
+        <asp:Label ID="Semester" runat="server"></asp:Label>
+        &nbsp;Branch:
+        <asp:Label ID="Branch" runat="server"></asp:Label>
+        &nbsp;<br /> Enter Question:
         <asp:TextBox ID="TextBox1" runat="server" Width="468px"></asp:TextBox>
         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="You must Enter a Question!!" ControlToValidate="TextBox1"></asp:RequiredFieldValidator>
         <br />
@@ -54,6 +61,7 @@
                 <asp:BoundField DataField="optionc" HeaderText="Option C"/>
                 <asp:BoundField DataField="optiond" HeaderText="Option D"/>
                 <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks"/>
+                <asp:BoundField DataField="subject" HeaderText="Subject" SortExpression="subject"/>
             </Columns>
         </asp:GridView>
         Questions:
@@ -62,6 +70,7 @@
             <Columns>
                 <asp:BoundField DataField="question" HeaderText="Questions"/>
                 <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks" />
+                <asp:BoundField DataField="subject" HeaderText="Subject" SortExpression="subject"/>
             </Columns>
         </asp:GridView>
     </asp:Panel>

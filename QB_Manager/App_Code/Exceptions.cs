@@ -57,4 +57,9 @@ namespace Exceptions
     {
         public NoSubjectChecked(string msg) : base(msg) { }
     }
+
+    public class NoSubjectFound : Exception
+    {
+        public NoSubjectFound(string msg) : base(msg) { }
+    }
 }

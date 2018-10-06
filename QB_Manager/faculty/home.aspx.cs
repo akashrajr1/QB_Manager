@@ -47,6 +47,7 @@ public partial class _Default : System.Web.UI.Page
         switch ((FacultyPower)RadioButtonList1.SelectedIndex)
         {
             case FacultyPower.CreateNewQuestion:
+                LoadSubjects();
                 Panel1.Visible = true;
                 break;
             case FacultyPower.DisplayAllQuestions:
@@ -105,6 +106,18 @@ public partial class _Default : System.Web.UI.Page
     SqlDataReader reader;
     SqlCommand cmd;
 
+    public void LoadSubjects()
+    {
+        string uid = (string) Session["uid"];
+        cmd = new SqlCommand("select distinct subject from subjects join teaches on subjects.subid=teaches.subid where uid=@uid",con);
+        cmd.Parameters.AddWithValue("@uid", uid);
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        SubjectsDropDownList.DataSource = ds;
+        SubjectsDropDownList.DataValueField = "subject";
+        SubjectsDropDownList.DataBind();
+    }
     protected void Button1_Click(object sender, EventArgs e)
     {
         string question = TextBox1.Text;
@@ -112,14 +125,17 @@ public partial class _Default : System.Web.UI.Page
         string marks = TextBox6.Text;
         int ismcq=0;
         string uid = Session["uid"].ToString();
+        string subid = Session["subid"].ToString();
         if (CheckBoxList1.SelectedIndex == 0) ismcq = 1;
+
 
         try
         {
+            if (SubjectsDropDownList.Items.Count == 0) throw new NoSubjectFound("No Subjects Selected!!");
             con.Open();
             if (ismcq == 1)
             {
-                cmd = new SqlCommand("insert into questions (ismcq,question,optiona,optionb,optionc,optiond,marks,uid) values(1,@question,@optiona,@optionb,@optionc,@optiond,@marks,@uid)",con);
+                cmd = new SqlCommand("insert into questions (ismcq,question,optiona,optionb,optionc,optiond,marks,uid,subid) values(1,@question,@optiona,@optionb,@optionc,@optiond,@marks,@uid,@subid)",con);
                 cmd.Parameters.AddWithValue("@question", question);
                 cmd.Parameters.AddWithValue("@optiona", options[0]);
                 cmd.Parameters.AddWithValue("@optionb", options[1]);
@@ -127,13 +143,15 @@ public partial class _Default : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@optiond", options[3]);
                 cmd.Parameters.AddWithValue("@marks", marks);
                 cmd.Parameters.AddWithValue("@uid", uid);
+                cmd.Parameters.AddWithValue("@subid", subid);
             }
             else
             {
-                cmd = new SqlCommand("insert into questions (ismcq,question,marks,uid) values(0,@question,@marks,@uid)",con);
+                cmd = new SqlCommand("insert into questions (ismcq,question,marks,uid,subid) values(0,@question,@marks,@uid,@subid)",con);
                 cmd.Parameters.AddWithValue("@question", question);
                 cmd.Parameters.AddWithValue("@marks", marks);
                 cmd.Parameters.AddWithValue("@uid", uid);
+                cmd.Parameters.AddWithValue("@subid", subid);
             }
             int flag = cmd.ExecuteNonQuery();
             if (flag !=1)
@@ -146,6 +164,10 @@ public partial class _Default : System.Web.UI.Page
         {
             Alert.Generate(this,err.Message);
         }
+        catch (NoSubjectFound err)
+        {
+            Alert.Generate(this, err.Message);
+        }
         finally { con.Close(); }
     }
 
@@ -153,7 +175,7 @@ public partial class _Default : System.Web.UI.Page
     {   
         string uid = Session["uid"].ToString();
         con.Open();
-        cmd = new SqlCommand("select question,marks from questions where ismcq=0 and uid=@uid",con);
+        cmd = new SqlCommand("select question,marks,subject from questions join subjects on subjects.subid=questions.subid where ismcq=0 and uid=@uid",con);
         cmd.Parameters.AddWithValue("@uid", uid);
         SqlDataAdapter da = new SqlDataAdapter(cmd);
         DataSet ds = new DataSet();
@@ -167,7 +189,7 @@ public partial class _Default : System.Web.UI.Page
     {
         string uid = Session["uid"].ToString();
         con.Open();
-        cmd = new SqlCommand("select question,marks,optiona,optionb,optionc,optiond from questions where ismcq=1 and uid=@uid", con);
+        cmd = new SqlCommand("select question,marks,optiona,optionb,optionc,optiond,subject from questions join subjects on subjects.subid=questions.subid where ismcq=1 and uid=@uid", con);
         cmd.Parameters.AddWithValue("@uid", uid);
         SqlDataAdapter da = new SqlDataAdapter(cmd);
         DataSet ds = new DataSet();
@@ -175,5 +197,23 @@ public partial class _Default : System.Web.UI.Page
         con.Close();
         GridView2.DataSource = ds;
         GridView2.DataBind();
+    }
+
+    protected void SubjectsDropDownList_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        con.Open();
+        cmd = new SqlCommand("select branch,semester,subid from subjects join branch on branch.branchid=subjects.branchid where subject=@subject", con);
+        cmd.Parameters.AddWithValue("@subject", SubjectsDropDownList.SelectedValue);
+        reader = cmd.ExecuteReader();
+        string branch = ""; string semester = ""; string subid = "";
+        while (reader.Read())
+        {
+            branch = (string)reader[0];
+            semester = (string)reader[1];
+            subid = ((int)reader[2]).ToString();
+        }
+        Branch.Text = branch;
+        Semester.Text = semester;
+        Session["subid"] = subid;
     }
 }
