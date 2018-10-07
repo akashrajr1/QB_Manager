@@ -105,11 +105,24 @@ public partial class admin_home : System.Web.UI.Page
         UserGridView.DataBind();
     }
 
+    public string GetUid(string username)
+    {
+        cmd = new SqlCommand("select uid from users where username=@username", con);
+        cmd.Parameters.AddWithValue("@username", username);
+        reader = cmd.ExecuteReader();
+        string uid = "";
+        while (reader.Read())
+            uid = ((int)reader[0]).ToString();
+        reader.Close();
+        return uid;
+    }
+
     protected void Button1_Click(object sender, EventArgs e)
     {
         string username = TextBox1.Text;
         string password = TextBox2.Text;
         int role = DropDownList1.SelectedIndex + 1;
+        bool reached = false;
 
         try
         {
@@ -131,12 +144,8 @@ public partial class admin_home : System.Web.UI.Page
                 throw new NoSubjectChecked("Please Select A Subject!!");
 
             int flag = cmd.ExecuteNonQuery();
-            cmd = new SqlCommand("select uid from users where username=@username", con);
-            cmd.Parameters.AddWithValue("@username", username);
-            reader = cmd.ExecuteReader();
-            string uid = "";
-            while (reader.Read())
-                uid = ((int)reader[0]).ToString();
+            reached = true;
+            string uid = GetUid(username);
             con.Close();
             con.Open();
             foreach (GridViewRow row in SubjectGridView.Rows)
@@ -150,6 +159,22 @@ public partial class admin_home : System.Web.UI.Page
                     flag=cmd.ExecuteNonQuery();
                 }
             }
+
+            if (role == (int)Roles.Incharge)
+            {
+                foreach (GridViewRow row in SubjectGridView.Rows)
+                {
+                    CheckBox box = (CheckBox)row.Cells[1].FindControl("CheckBox1");
+                    if (box.Checked == true)
+                    {
+                        cmd = new SqlCommand("insert into Incharge(uid,subid) values(@uid,@subid)", con);
+                        cmd.Parameters.AddWithValue("@uid", uid);
+                        cmd.Parameters.AddWithValue("@subid", row.Cells[0].Text);
+                        flag = cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
             if (flag != 0)
                 Alert.Generate(this, "New User Created!!");
             else
@@ -166,7 +191,29 @@ public partial class admin_home : System.Web.UI.Page
         }
         catch (SqlException err)
         {
-            Alert.Generate(this, "Username alreadys exists!!");
+            switch (err.Number)
+            {
+                case 2627:
+                    if (reached)
+                    {
+                        
+                        string uid = GetUid(username);
+                        Alert.Generate(this, "Incharge for this subject already exists!!");
+                        cmd = new SqlCommand("delete from incharge where uid=@uid", con);
+                        cmd.Parameters.AddWithValue("@uid", uid);
+                        cmd.ExecuteNonQuery();
+                        cmd = new SqlCommand("delete from teaches where uid=@uid", con);
+                        cmd.Parameters.AddWithValue("@uid", uid);
+                        cmd.ExecuteNonQuery();
+                        cmd = new SqlCommand("delete from users where uid=@uid", con);
+                        cmd.Parameters.AddWithValue("@uid", uid);
+                        cmd.ExecuteNonQuery();
+                        Alert.Generate(this, "Details won't be saved!!");
+                    }
+                    else
+                        Alert.Generate(this, "User already exists!!");
+                    break;
+            }
         }
         finally { con.Close(); }
     }

@@ -38,6 +38,7 @@ public partial class incharge_home : System.Web.UI.Page
     {
         Panel1.Visible = false;
         Panel2.Visible = false;
+        OutsidePanel.Visible = false;
     }
 
     protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
@@ -46,14 +47,16 @@ public partial class incharge_home : System.Web.UI.Page
         switch ((InChargePower)RadioButtonList1.SelectedIndex)
         {
             case InChargePower.ChooseFinalQuestions:
-                Panel1.Visible = true;
+                PopulateSubjects();
                 UpdateGridViewMcqs();
                 UpdateGridView();
                 SetCheckBoxes();
+                Panel1.Visible = true;
                 break;
             case InChargePower.ViewQuestionPaper:
                 SaveCheckBoxState(null,null);
                 GeneratePaper();
+                OutsidePanel.Visible = true;
                 Panel2.Visible = true;
                 break;
         }
@@ -66,7 +69,8 @@ public partial class incharge_home : System.Web.UI.Page
     public void UpdateGridViewMcqs()
     {
         con.Open();
-        cmd = new SqlCommand("select question,marks,optiona,optionb,optionc,optiond from questions where ismcq=1 order by marks asc", con);
+        cmd = new SqlCommand("select question,marks,optiona,optionb,optionc,optiond,qid from questions join subjects on questions.subid=subjects.subid where ismcq=1 and subject=@subject order by marks asc", con);
+        cmd.Parameters.AddWithValue("@subject", SubjectDropDownList.SelectedValue);
         SqlDataAdapter da = new SqlDataAdapter(cmd);
         DataSet ds = new DataSet();
         da.Fill(ds);
@@ -78,7 +82,8 @@ public partial class incharge_home : System.Web.UI.Page
     public void UpdateGridView()
     {
         con.Open();
-        cmd = new SqlCommand("select question,marks from questions where ismcq=0 order by marks asc", con);
+        cmd = new SqlCommand("select question,marks,qid from questions join subjects on questions.subid=subjects.subid where ismcq=0 and subject=@subject order by marks asc", con);
+        cmd.Parameters.AddWithValue("@subject", SubjectDropDownList.SelectedValue);
         SqlDataAdapter da = new SqlDataAdapter(cmd);
         DataSet ds = new DataSet();
         da.Fill(ds);
@@ -149,12 +154,14 @@ public partial class incharge_home : System.Web.UI.Page
         Button button = (Button)sender;
         if (button != null)
         {
-            Alert.Generate(this, "Questions Saved!!");
+            Alert.Generate(this, "Questions Paper Generated!!");
             HttpCookie cookie = Request.Cookies["userdata"];
             cookie["code1"] = code1;
             cookie["code2"] = code2;
             Response.SetCookie(cookie);
         }
+
+        Session["subject"] = SubjectDropDownList.SelectedValue;
     }
 
     public string GeneratePaper()
@@ -164,6 +171,10 @@ public partial class incharge_home : System.Web.UI.Page
         string questions = "";
         string code1 = cookie["code1"];
         if (code1 == null) return questions;
+
+        Subject.Text = Session["subject"].ToString();
+        Branch.Text = GetData(0);
+        Semester.Text = GetData(1);
 
         questions += "<div style='margin-left: 20px;'><b>Select the correct MCQs</b><br><br>";
         int rowIndex = 0, count=1;
@@ -204,5 +215,85 @@ public partial class incharge_home : System.Web.UI.Page
 
         questions += "</div>";
         return questions;
+    }
+
+    public void PopulateSubjects()
+    {
+        string uid = Session["uid"].ToString();
+        cmd = new SqlCommand("select subject from subjects join teaches on subjects.subid=teaches.subid where uid=@uid", con);
+        cmd.Parameters.AddWithValue("@uid", uid);
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        SubjectDropDownList.DataSource = ds;
+        SubjectDropDownList.DataValueField = "subject";
+        SubjectDropDownList.DataBind();
+    }
+
+    protected void SubjectDropDownList_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        UpdateGridViewMcqs();
+        UpdateGridView();
+    }
+
+    public string GetData(int select)
+    {
+        string subject = Session["subject"].ToString();
+        con.Close();
+        con.Open();
+        cmd = new SqlCommand("select branch,semester,subid from branch join subjects on branch.branchid=subjects.branchid where subject=@subject", con);
+        cmd.Parameters.AddWithValue("@subject", subject);
+        reader = cmd.ExecuteReader();
+        string branch = "", semester = "", subid = "";
+        while (reader.Read())
+        {
+            branch = reader[0].ToString();
+            semester = reader[1].ToString();
+            subid = reader[2].ToString();
+        }
+        reader.Close();
+        switch (select)
+        {
+            case 0: return branch;
+            case 1: return semester;
+            case 2: return subid;
+        }
+        return "null";
+    }
+
+    protected void Button2_Click(object sender, EventArgs e)
+    {
+        string uid = Session["uid"].ToString();
+        string subid = GetData(2);
+        cmd = new SqlCommand("insert into Papers (subid) output inserted.paperid values(@subid)", con);
+        cmd.Parameters.AddWithValue("@subid", subid);
+        int paperid = (int)cmd.ExecuteScalar();
+        foreach(GridViewRow row in GridView1.Rows)
+        {
+            CheckBox box = (CheckBox)row.Cells[0].FindControl("CheckBox1");
+            if (box.Checked)
+            {
+                HiddenField hidden = (HiddenField)row.Cells[0].FindControl("HiddenField1");
+                string questionid = hidden.Value.ToString();
+                cmd = new SqlCommand("insert into PaperDb (paperid,questionid) values(@paperid,@questionid)", con);
+                cmd.Parameters.AddWithValue("@paperid", paperid);
+                cmd.Parameters.AddWithValue("@questionid", questionid);
+                cmd.ExecuteNonQuery();
+            }
+        }
+        foreach (GridViewRow row in GridView2.Rows)
+        {
+            CheckBox box = (CheckBox)row.Cells[0].FindControl("CheckBox2");
+            if (box.Checked)
+            {
+                HiddenField hidden = (HiddenField)row.Cells[0].FindControl("HiddenField1");
+                string questionid = hidden.Value.ToString();
+                cmd = new SqlCommand("insert into PaperDb (paperid,questionid) values(@paperid,@questionid)", con);
+                cmd.Parameters.AddWithValue("@paperid", paperid);
+                cmd.Parameters.AddWithValue("@questionid", questionid);
+                cmd.ExecuteNonQuery();
+            }
+        }
+        Alert.Generate(this, "Question Paper Saved");
     }
 }

@@ -48,6 +48,8 @@ public partial class _Default : System.Web.UI.Page
         {
             case FacultyPower.CreateNewQuestion:
                 LoadSubjects();
+                if(SubjectsDropDownList.Items.Count==1)
+                    SubjectsDropDownList_SelectedIndexChanged(null, null);
                 Panel1.Visible = true;
                 break;
             case FacultyPower.DisplayAllQuestions:
