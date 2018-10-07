@@ -12,7 +12,8 @@
         <asp:ListItem Value="3">Change User Role</asp:ListItem>
         <asp:ListItem Value="4">Block a User</asp:ListItem>
         <asp:ListItem Value="5">Delete User</asp:ListItem>
-        <asp:ListItem Value="6">None</asp:ListItem>
+        <asp:ListItem Value="6">View Question Papers</asp:ListItem>
+        <asp:ListItem Value="7">None</asp:ListItem>
     </asp:RadioButtonList>
     <br />
     <asp:Panel ID="Panel1" runat="server" Visible="False">
@@ -107,6 +108,26 @@
         <br />
         <asp:Button ID="Button5" runat="server" Text="Delete" OnClientClick="return confirm('Are you sure you want to Delete this user?')" OnClick="Button5_Click"/>
         <br />
+    </asp:Panel>
+    <asp:Panel ID="OutsidePanel" runat="server" Visible="false">
+        <asp:DropDownList ID="PaperDropDownList" runat="server" AutoPostBack="true" OnSelectedIndexChanged="PaperDropDownList_SelectedIndexChanged"></asp:DropDownList>
+        <asp:Panel ID="QuestionPanel" runat="server" BorderStyle="Double" BorderColor="OrangeRed" Visible="false" ClientIDMode="Static">
+            <img alt="Logo" longdesc="Logo for question paper" src="../images/questionlogo.jpg" style="width: 960px; height: 131px" />
+            <br />
+            &nbsp;
+            <asp:Label ID="Semester" runat="server"></asp:Label>
+            &nbsp;Semester&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Label ID="Branch" runat="server"></asp:Label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Subject:&nbsp;
+            <asp:Label ID="Subject" runat="server"></asp:Label>
+            <br />
+            <br />
+            <b>&nbsp; <asp:Label ID="Label1" runat="server" Text="Attempt all questions"></asp:Label></b>
+            <br />
+            <br />
+            <br />
+            <asp:Label ID="Label3" runat="server" ></asp:Label>
+    </asp:Panel>
     </asp:Panel>
     <br />
 </asp:Content>

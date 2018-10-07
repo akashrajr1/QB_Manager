@@ -43,6 +43,8 @@ public partial class admin_home : System.Web.UI.Page
         Panel4.Visible = false;
         Panel5.Visible = false;
         Panel6.Visible = false;
+        OutsidePanel.Visible = false;
+        QuestionPanel.Visible = false;
     }
 
     protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
@@ -73,6 +75,12 @@ public partial class admin_home : System.Web.UI.Page
             case AdminPower.DeleteUser:
                 PopulateUserDropDownList2(UserDropDownList4);
                 Panel6.Visible = true;
+                break;
+            case AdminPower.ViewQuestionPaper:
+                PopulatePapers();
+                OutsidePanel.Visible = true;
+                if (PaperDropDownList.Items.Count == 1)
+                    QuestionPanel.Visible = true;
                 break;
         }
     }
@@ -387,5 +395,98 @@ public partial class admin_home : System.Web.UI.Page
         UserDropDownList3.DataSource = ds;
         UserDropDownList3.DataTextField = "username";
         UserDropDownList3.DataBind();
+    }
+
+    public void PopulatePapers()
+    {
+        PaperDropDownList.Items.Clear();
+        con.Open();
+        cmd = new SqlCommand("select subject,branch,semester,username,paperid from users join incharge on users.uid=incharge.uid join subjects on incharge.subid=subjects.subid join branch on subjects.branchid=branch.branchid join papers on subjects.subid=papers.subid",con);
+        reader = cmd.ExecuteReader();
+        string Paper = "";
+        int i = 1;
+        Dictionary<string, string> list = new Dictionary<string, string>();
+        while (reader.Read())
+        {
+            Session["subject"] = reader[0];
+            Session["branch"] = reader[1];
+            Session["semester"] = reader[2];
+            Paper = "Paper " + i.ToString() + ": " + Session["subject"].ToString() + ", " + Session["branch"].ToString() + ", " + Session["semester"].ToString()+" by "+reader[3].ToString();
+            list.Add(reader[4].ToString(), Paper);
+            i++;
+        }
+        PaperDropDownList.DataSource = list;
+        PaperDropDownList.DataTextField = "Value";
+        PaperDropDownList.DataValueField = "Key";
+        PaperDropDownList.DataBind();
+        reader.Close();
+    }
+
+    public string GeneratePaper()
+    {
+
+        return "null";
+    }
+
+    protected void PaperDropDownList_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        QuestionPanel.Visible = true;
+        string paper = "";
+        if (PaperDropDownList.Items.Count > 1)
+            paper = PaperDropDownList.SelectedItem.Text;
+        else
+            paper = PaperDropDownList.Items[0].Text;
+        int strt = paper.IndexOf(':') + 2;
+        int end = paper.IndexOf(',');
+        string subject = paper.Substring(strt, end - strt);
+        strt = end + 2;
+        end = paper.IndexOf(',', strt);
+        string branch = paper.Substring(strt, end - strt);
+        strt = end + 2;
+        end = paper.IndexOf('b');
+        string semester = paper.Substring(strt, end - strt);
+        Subject.Text = subject;
+        Branch.Text = branch;
+        Semester.Text = semester;
+
+        string paperid = PaperDropDownList.SelectedValue;
+        string questions = "";
+        questions += "<div style='margin-left: 20px;'><b>Select the correct MCQs</b><br><br>";
+        int count = 1;
+
+        con.Open();
+        cmd = new SqlCommand("select question,optiona,optionb,optionc,optiond,marks from paperdb join questions on paperdb.questionid=questions.qid where paperid=@paperid and ismcq=1", con);
+        cmd.Parameters.AddWithValue("@paperid", paperid);
+        reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            string sno = count.ToString() + ". ";
+            string question = reader[0].ToString();
+            string optiona = reader[1].ToString();
+            string optionb = reader[2].ToString();
+            string optionc = reader[3].ToString();
+            string optiond = reader[4].ToString();
+            string marks = reader[5].ToString();
+            questions += sno + "  " + question + "<br>a. " + optiona + "<br>b. " + optionb + "<br>c. " + optionc + "<br>d. " + optiond + "<br>(" + marks + ")<br><br>";
+            count++;
+        }
+        reader.Close();
+        questions += "<b>Answer in brief</b><br><br>";
+        count = 1;
+        cmd = new SqlCommand("select question,marks from paperdb join questions on paperdb.questionid=questions.qid where paperid=@paperid and ismcq=0", con);
+        cmd.Parameters.AddWithValue("@paperid", paperid);
+        reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            string sno = count.ToString() + ". ";
+            string question = reader[0].ToString();
+            string marks = reader[1].ToString();
+            questions += sno + "  " + question + "<br>(" + marks + ")<br><br>";
+            count++;
+        }
+        reader.Close();
+        questions += "</div>";
+        con.Close();
+        Label3.Text = questions;
     }
 }

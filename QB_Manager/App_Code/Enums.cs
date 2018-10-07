@@ -15,7 +15,7 @@ namespace Enums
 
     public enum AdminPower
     {
-        CreateNewUser, DisplayAllUsers, ChangeUserPassword, ChangeUserRole, BlockUser, DeleteUser
+        CreateNewUser, DisplayAllUsers, ChangeUserPassword, ChangeUserRole, BlockUser, DeleteUser, ViewQuestionPaper
     }
 
     public enum FacultyPower
