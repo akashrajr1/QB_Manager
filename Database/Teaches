@@ -1,0 +1,7 @@
+CREATE TABLE [dbo].[Teaches] (
+    [uid]   INT NOT NULL,
+    [subid] INT NOT NULL,
+    CONSTRAINT [FK_Teaches_ToTable] FOREIGN KEY ([uid]) REFERENCES [dbo].[Users] ([uid]),
+    CONSTRAINT [FK_Teaches_ToTable_1] FOREIGN KEY ([subid]) REFERENCES [dbo].[Subjects] ([subid])
+);
+

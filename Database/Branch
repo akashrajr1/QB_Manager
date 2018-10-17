@@ -1,0 +1,5 @@
+CREATE TABLE [dbo].[Branch] (
+    [branchid] INT          IDENTITY (1, 1) NOT NULL,
+    [branch]   VARCHAR (50) NOT NULL,
+    PRIMARY KEY CLUSTERED ([branchid] ASC)
+);

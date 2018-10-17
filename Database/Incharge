@@ -1,0 +1,8 @@
+CREATE TABLE [dbo].[Incharge] (
+    [uid]   INT NOT NULL,
+    [subid] INT NOT NULL,
+    UNIQUE NONCLUSTERED ([subid] ASC),
+    CONSTRAINT [PK_Table] PRIMARY KEY CLUSTERED ([subid] ASC),
+    CONSTRAINT [FK_Table_ToTable] FOREIGN KEY ([subid]) REFERENCES [dbo].[Subjects] ([subid]),
+    CONSTRAINT [FK_Table_ToTable_1] FOREIGN KEY ([uid]) REFERENCES [dbo].[Users] ([uid])
+);

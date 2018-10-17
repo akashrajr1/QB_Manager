@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[Subjects] (
+    [subid]    INT          IDENTITY (1, 1) NOT NULL,
+    [subject]  VARCHAR (50) NOT NULL,
+    [branchid] INT          NOT NULL,
+    [semester] VARCHAR (50) NULL,
+    PRIMARY KEY CLUSTERED ([subid] ASC),
+    CONSTRAINT [FK_Subjects_ToTable] FOREIGN KEY ([branchid]) REFERENCES [dbo].[Branch] ([branchid])
+);
+

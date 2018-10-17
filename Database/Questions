@@ -1,0 +1,16 @@
+CREATE TABLE [dbo].[Questions] (
+    [qid]      INT          IDENTITY (1, 1) NOT NULL,
+    [ismcq]    INT          DEFAULT ((1)) NOT NULL,
+    [question] TEXT         NOT NULL,
+    [optiona]  VARCHAR (50) NULL,
+    [optionb]  VARCHAR (50) NULL,
+    [optionc]  VARCHAR (50) NULL,
+    [optiond]  VARCHAR (50) NULL,
+    [marks]    FLOAT (53)   NOT NULL,
+    [uid]      INT          NOT NULL,
+    [subid]    INT          NULL,
+    CONSTRAINT [PK_Questions] PRIMARY KEY CLUSTERED ([qid] ASC),
+    CONSTRAINT [FK_Questions_ToTable_1] FOREIGN KEY ([subid]) REFERENCES [dbo].[Subjects] ([subid]),
+    CONSTRAINT [FK_Questions_ToTable] FOREIGN KEY ([uid]) REFERENCES [dbo].[Users] ([uid])
+);
+

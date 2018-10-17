@@ -1,0 +1,6 @@
+CREATE TABLE [dbo].[Papers] (
+    [paperid] INT IDENTITY (1, 1) NOT NULL,
+    [subid]   INT NOT NULL,
+    CONSTRAINT [PK_Papers] PRIMARY KEY CLUSTERED ([paperid] ASC)
+);
+

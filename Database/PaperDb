@@ -1,0 +1,7 @@
+CREATE TABLE [dbo].[PaperDb] (
+    [paperid]    INT NOT NULL,
+    [questionid] INT NOT NULL,
+    CONSTRAINT [FK_PaperDb_ToTable_1] FOREIGN KEY ([questionid]) REFERENCES [dbo].[Questions] ([qid]),
+    CONSTRAINT [FK_PaperDb_ToTable] FOREIGN KEY ([paperid]) REFERENCES [dbo].[Papers] ([paperid])
+);
+
