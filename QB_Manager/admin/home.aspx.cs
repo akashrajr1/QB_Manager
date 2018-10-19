@@ -80,7 +80,11 @@ public partial class admin_home : System.Web.UI.Page
                 PopulatePapers();
                 OutsidePanel.Visible = true;
                 if (PaperDropDownList.Items.Count == 1)
+                {
                     QuestionPanel.Visible = true;
+                    PaperDropDownList_SelectedIndexChanged(null, null);
+                }
+
                 break;
         }
     }
@@ -443,7 +447,7 @@ public partial class admin_home : System.Web.UI.Page
         end = paper.IndexOf(',', strt);
         string branch = paper.Substring(strt, end - strt);
         strt = end + 2;
-        end = paper.IndexOf('b');
+        end = paper.IndexOf('b',end);
         string semester = paper.Substring(strt, end - strt);
         Subject.Text = subject;
         Branch.Text = branch;
@@ -453,7 +457,7 @@ public partial class admin_home : System.Web.UI.Page
         string questions = "";
         questions += "<div style='margin-left: 20px;'><b>Select the correct MCQs</b><br><br>";
         int count = 1;
-
+        con.Close();
         con.Open();
         cmd = new SqlCommand("select question,optiona,optionb,optionc,optiond,marks from paperdb join questions on paperdb.questionid=questions.qid where paperid=@paperid and ismcq=1", con);
         cmd.Parameters.AddWithValue("@paperid", paperid);
