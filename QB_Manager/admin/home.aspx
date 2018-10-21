@@ -15,7 +15,6 @@
         <asp:ListItem Value="4">Block a User</asp:ListItem>
         <asp:ListItem Value="5">Delete User</asp:ListItem>
         <asp:ListItem Value="6">View Question Papers</asp:ListItem>
-        <asp:ListItem Value="7">None</asp:ListItem>
     </asp:RadioButtonList>
      </div>
 

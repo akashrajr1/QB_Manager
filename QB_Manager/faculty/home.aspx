@@ -10,7 +10,6 @@
         <asp:RadioButtonList ID="RadioButtonList1" runat="server" AutoPostBack="true" OnSelectedIndexChanged="RadioButtonList1_SelectedIndexChanged">
         <asp:ListItem Value="0">Add new Question</asp:ListItem>
         <asp:ListItem Value="1">See Current Questions</asp:ListItem>
-        <asp:ListItem Value="2">None</asp:ListItem>
     </asp:RadioButtonList>
         </div>
 
