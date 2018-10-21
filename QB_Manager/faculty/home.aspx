@@ -13,9 +13,9 @@
         <asp:ListItem Value="2">None</asp:ListItem>
     </asp:RadioButtonList>
         </div>
-
-    <div style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
-    <asp:Panel ID="Panel1" runat="server" Visible="False">
+    <br />
+    <div >
+    <asp:Panel ID="Panel1" runat="server" Visible="False" style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         Subject:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <asp:DropDownList ID="SubjectsDropDownList" runat="server" AutoPostBack="true" OnSelectedIndexChanged="SubjectsDropDownList_SelectedIndexChanged">
         </asp:DropDownList>
@@ -59,8 +59,8 @@
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Submit" />
     </asp:Panel>
         </div>
-        <div style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
-    <asp:Panel ID="Panel3" runat="server"  Visible="false">
+        <div >
+    <asp:Panel ID="Panel3" runat="server"  Visible="false" style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         MCQs:
         <br />
         <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="false">
