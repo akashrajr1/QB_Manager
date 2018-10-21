@@ -12,9 +12,9 @@
         <asp:ListItem Value="1">View Question Paper</asp:ListItem>
     </asp:RadioButtonList>
         </div>
-
-    <div style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
-    <asp:Panel ID="Panel1" runat="server" Visible="False">
+    <br />
+    <div >
+    <asp:Panel ID="Panel1" runat="server" Visible="False" style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         Select Subject:
         <asp:DropDownList ID="SubjectDropDownList" runat="server" AutoPostBack="true" OnSelectedIndexChanged="SubjectDropDownList_SelectedIndexChanged">
         </asp:DropDownList>

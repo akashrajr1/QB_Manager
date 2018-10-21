@@ -17,9 +17,9 @@
         <asp:ListItem Value="6">View Question Papers</asp:ListItem>
     </asp:RadioButtonList>
      </div>
-
-     <div style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
-    <asp:Panel ID="Panel1" runat="server" Visible="False">
+      <br />
+     <div >
+    <asp:Panel ID="Panel1" runat="server" Visible="False" style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         Select Role of the new User: <asp:DropDownList ID="DropDownList1" runat="server" Width="120px" >
             <asp:ListItem Value="1">Faculty In Charge</asp:ListItem>
             <asp:ListItem Value="2">Faculty</asp:ListItem>
@@ -55,8 +55,8 @@
     </asp:Panel>
          </div>
 
-    <div style="width:140px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
-    <asp:Panel ID="Panel2" runat="server"  Visible="False" >
+    <div >
+    <asp:Panel ID="Panel2" runat="server"  Visible="False" style="width:140px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px" >
         <asp:GridView ID="UserGridView" runat="server" AutoGenerateColumns="False" AllowPaging="true" PageSize="8" OnPageIndexChanging="UserGridViewPageIndexChanging" RowStyle-HorizontalAlign="Center">
             <Columns>
                 <asp:BoundField DataField="username" HeaderText="Username" SortExpression="username" />
@@ -67,9 +67,9 @@
 </asp:Panel>
         </div>
        
-    <div style="width:440px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
+    <div >
 
-    <asp:Panel ID="Panel3" runat="server" Visible="False">
+    <asp:Panel ID="Panel3" runat="server" Visible="False" style="width:440px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         Select User:
         <asp:DropDownList ID="UserDropDownList" runat="server">
         </asp:DropDownList>
@@ -91,8 +91,8 @@
     </asp:Panel>
         </div>
 
-    <div style="width:340px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
-    <asp:Panel ID="Panel4" runat="server" Visible="False">
+    <div >
+    <asp:Panel ID="Panel4" runat="server" Visible="False" style="width:340px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         Select User:&nbsp;&nbsp;
         <asp:DropDownList ID="UserDropDownList2" runat="server" AutoPostBack="true" OnSelectedIndexChanged="UserDropDownList_SelectedIndexChanged">
         </asp:DropDownList>
@@ -114,7 +114,7 @@
 
         
 
-    <asp:Panel ID="Panel5" runat="server" Visible="False" >
+    <asp:Panel ID="Panel5" runat="server" Visible="False" style="width:340px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         Select User:
         <asp:DropDownList ID="UserDropDownList3" runat="server">
         </asp:DropDownList>
@@ -126,7 +126,7 @@
         
 
 
-    <asp:Panel ID="Panel6" runat="server" Visible="False">
+    <asp:Panel ID="Panel6" runat="server" Visible="False" style="width:340px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         Select User To Delete:
         <asp:DropDownList ID="UserDropDownList4" runat="server">
         </asp:DropDownList>
@@ -138,7 +138,7 @@
 
         </div>
 
-
+  
     <asp:Panel ID="OutsidePanel" runat="server" Visible="false">
         <div style="text-align:center">
         <asp:DropDownList ID="PaperDropDownList" runat="server" AutoPostBack="true" OnSelectedIndexChanged="PaperDropDownList_SelectedIndexChanged"></asp:DropDownList>
