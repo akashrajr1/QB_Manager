@@ -294,6 +294,6 @@ public partial class incharge_home : System.Web.UI.Page
                 cmd.ExecuteNonQuery();
             }
         }
-        Alert.Generate(this, "Question Paper Saved");
+        Alert.Generate(this, "Question Paper is Saved");
     }
 }
