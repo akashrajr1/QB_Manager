@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html  xmlns="http://www.w3.org/1999/xhtml" style="background-image: url(/images/mit.jpg); background-repeat:no-repeat;background-size:cover;background-position: center;height: 100%;" >
 <head runat="server">
     <title></title>
     <style type="text/css">
@@ -11,25 +11,42 @@
             height: 190px;
         }
     </style>
-</head>
-<body>
 
-    <form id="form1" runat="server">
-        <p>
-            Welcome
-            <asp:Label ID="Label1" runat="server"></asp:Label>
-            !!<asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Logout" />
-        </p>
-        <p>
+    <link href="StyleSheet.css" rel="stylesheet" />
+</head>
+<body >
+    
+    <form id="form1" runat="server" class="wrapper">
+        <div style="text-align: center;">
+       
+           <h2 style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"> Welcome
+            <asp:Label ID="Label1" runat="server"></asp:Label>!!</h2>
+            <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Logout" />
+        
+        </div>
+        
             <asp:ContentPlaceHolder ID="Body" runat="server">
             </asp:ContentPlaceHolder>
-        </p>
+
+           <div class="push"></div>
+        
+            
     </form>
 
-    <p>
-        <img alt="Bats" class="auto-style1" src="C:/Users/akash/Desktop/QB_Manager/QB_Manager/images/bat.jpg" /></p>
-    <p>
-        Desgined by Akash &amp; Prakhar</p>
+
+     <div class="footernew">
+                <img alt="Bats" class="auto-style1" src="/images/A&Plogo.png" style="width:70px;height:70px;"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (c) Copyright 2018
+                <br />
+                <br />
+                All Rights Reserved.
+            
+                <br />
+                Site by Akash & Prakhar
+            
+    </div>
+    
+    
+        
 
 </body>
 </html>

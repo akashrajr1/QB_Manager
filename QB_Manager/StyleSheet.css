@@ -1,4 +1,23 @@
-﻿html, body,  {
-    min-height: 100%;
+﻿* {
+    margin: 0;
+}
+
+html, body {
     height: 100%;
+}
+
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -142px; /* the bottom margin is the negative value of the footer's height */
+}
+
+.push {
+    height: 142px;
+}
+.footernew {
+    padding:10px;
+    height: 142px;
+    background: #6a93d4;
 }

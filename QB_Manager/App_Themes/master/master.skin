@@ -1,0 +1,8 @@
+﻿
+<asp:GridView runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="8" RowStyle-HorizontalAlign="Center" HeaderStyle-BackColor="#3366ff" AlternatingRowStyle-BackColor="#f0f0f0" SelectedRowStyle-BackColor="#ffff66"/>
+
+<asp:RequiredFieldValidator  runat="server"  ForeColor="Red"></asp:RequiredFieldValidator>
+
+ <asp:CompareValidator runat="server" ForeColor="Red"></asp:CompareValidator>
+
+<asp:RadioButtonList  runat="server"  BorderColor="OrangeRed" BorderStyle="Double" />

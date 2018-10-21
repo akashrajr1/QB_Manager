@@ -1,12 +1,20 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/home.master" AutoEventWireup="true" CodeFile="home.aspx.cs" Inherits="incharge_home" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/home.master" AutoEventWireup="true" CodeFile="home.aspx.cs" Inherits="incharge_home" Theme="master" %>
 
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" Runat="Server">
+    <br />
+    <br />
+
+    <div style="width:300px; margin: auto;background-color:rgba(0,255,255,0.5);padding:10px">
+        Select Operation to Perform: <br /> <br />
     <asp:RadioButtonList ID="RadioButtonList1" runat="server" AutoPostBack="true" OnSelectedIndexChanged="RadioButtonList1_SelectedIndexChanged">
         <asp:ListItem Value="0">Choose Final Questions</asp:ListItem>
         <asp:ListItem Value="1">View Question Paper</asp:ListItem>
         <asp:ListItem Value="2">None</asp:ListItem>
     </asp:RadioButtonList>
+        </div>
+
+    <div style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
     <asp:Panel ID="Panel1" runat="server" Visible="False">
         Select Subject:
         <asp:DropDownList ID="SubjectDropDownList" runat="server" AutoPostBack="true" OnSelectedIndexChanged="SubjectDropDownList_SelectedIndexChanged">
@@ -30,7 +38,7 @@
                 <asp:BoundField DataField="optiond" HeaderText="Option D" SortExpression="optiond" />
                 <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks" />
             </Columns>
-        </asp:GridView>
+        </asp:GridView> <br />
         Questions:<br />
         <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="false">
             <Columns>
@@ -43,11 +51,14 @@
                 <asp:BoundField DataField="question" HeaderText="Questions" SortExpression="question" />
                 <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks" />
             </Columns>
-        </asp:GridView>
+        </asp:GridView> <br />
         <asp:Button ID="Button1" runat="server" Text="Save Selection" OnClick="SaveCheckBoxState"/>
     </asp:Panel>
+
+        </div>
     <asp:Panel ID="OutsidePanel" runat="server" Visible="false">
-        <asp:Panel ID="Panel2" runat="server" BorderStyle="Double" BorderColor="OrangeRed" Visible="false">
+
+        <asp:Panel ID="Panel2" runat="server" BorderStyle="Double" BorderColor="OrangeRed" Visible="false" BackColor="White">
             <img alt="Logo" longdesc="Logo for question paper" src="../images/questionlogo.jpg" style="width: 960px; height: 131px" />
             <br />
             &nbsp;
@@ -63,7 +74,7 @@
             <br />
             <br />
             <%= GeneratePaper() %>
-        </asp:Panel>
+        </asp:Panel> <br />
     <asp:Button ID="Button2" runat="server" Text="Save Paper" OnClick="Button2_Click" />
     </asp:Panel>
     <br />
