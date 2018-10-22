@@ -74,7 +74,7 @@
             <br />
             <%= GeneratePaper() %>
         </asp:Panel> <br />
-    <asp:Button ID="Button2" runat="server" Text="Save Paper" OnClick="Button2_Click" />
+    <asp:Button ID="Button2" runat="server" Text="Save Paper" OnClick="Button2_Click"  />
     </asp:Panel>
     <br />
 </asp:Content>
