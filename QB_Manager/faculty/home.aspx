@@ -16,7 +16,7 @@
     <div >
     <asp:Panel ID="Panel1" runat="server" Visible="False" style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         Subject:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <asp:DropDownList ID="SubjectsDropDownList" runat="server" AutoPostBack="true" OnSelectedIndexChanged="SubjectsDropDownList_SelectedIndexChanged">
+        <asp:DropDownList ID="SubjectsDropDownList" runat="server" AutoPostBack="true" OnSelectedIndexChanged="SubjectsDropDownList_SelectedIndexChanged" >
         </asp:DropDownList>
         &nbsp;Semester:
         <asp:Label ID="Semester" runat="server"></asp:Label>
@@ -75,13 +75,64 @@
         </asp:GridView> <br />
         Questions:
         <br />
-        <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false">
+        <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowEditing="GridView1_RowEditing" OnRowUpdating="GridView1_RowUpdating" OnRowDeleting="GridView1_RowDeleting"
+            AllowPaging="true" PageSize="2" OnPageIndexChanging="GridView1_PageIndexChanging" >
             <Columns>
-                <asp:BoundField DataField="question" HeaderText="Questions"/>
-                <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks" />
-                <asp:BoundField DataField="subject" HeaderText="Subject" SortExpression="subject"/>
+                <asp:TemplateField >  
+                    <HeaderStyle CssClass="hide" />
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_qid1" runat="server" Text='<%#Eval("qid") %>' Visible="false"></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:Label ID="lbl_qid2" runat="server" Text='<%#Eval("qid") %>' Visible="false"></asp:Label>  
+                    </EditItemTemplate>
+                </asp:TemplateField> 
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <asp:Button ID="EditButton1" runat="server" Text="Edit" CommandName="Edit" />
+                        <asp:Button ID="DeleteButton1" runat="server" Text="Delete" CommandName="Delete" OnClientClick="return confirm('Are you sure you want to Delete this user?')"/>
+                    </ItemTemplate>
+                    <EditItemTemplate>
+                        <asp:Button ID="UpdateButton1" runat="server" Text="Update" CommandName="Update" />
+                        <asp:Button ID="CancelButton1" runat="server" Text="Cancel" CommandName="Cancel" />
+                    </EditItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Questions">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_question" runat="server" Text='<%#Eval("question") %>' Wrap="true"></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:TextBox ID="txt_question" runat="server" Text='<%#Eval("question") %>' Wrap="true"></asp:TextBox>  
+                    </EditItemTemplate>
+                </asp:TemplateField>  
+                <asp:TemplateField HeaderText="Marks">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_marks" runat="server" Text='<%#Eval("marks") %>'></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:TextBox ID="txt_marks" runat="server" Text='<%#Eval("marks") %>'></asp:TextBox>  
+                    </EditItemTemplate>  
+                </asp:TemplateField>  
+                <asp:TemplateField HeaderText="Subjects">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_subject" runat="server" Text='<%#Eval("subject") %>'></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:DropDownList ID="SubjectsDropDownList2" runat="server" DataSourceID="SqlDataSource1" DataTextField="subject">
+
+                        </asp:DropDownList>
+                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:QB_ManagerConnectionString %>" SelectCommand="select distinct subject from subjects join teaches on subjects.subid=teaches.subid where uid=@uid" >
+                             <SelectParameters>
+                                <asp:SessionParameter Name="uid" SessionField="uid"/>
+                            </SelectParameters>
+                        </asp:SqlDataSource>
+                    </EditItemTemplate>  
+                </asp:TemplateField>  
             </Columns>
         </asp:GridView>
+
+        <br />
+
     </asp:Panel>
             </div>
 &nbsp;

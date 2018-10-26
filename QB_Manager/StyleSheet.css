@@ -21,3 +21,6 @@ html, body {
     height: 142px;
     background: #6a93d4;
 }
+.hide{
+    display: none;
+}

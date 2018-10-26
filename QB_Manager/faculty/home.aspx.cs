@@ -48,7 +48,7 @@ public partial class _Default : System.Web.UI.Page
         {
             case FacultyPower.CreateNewQuestion:
                 LoadSubjects();
-                if(SubjectsDropDownList.Items.Count==1)
+                //if(SubjectsDropDownList.Items.Count==1)
                     SubjectsDropDownList_SelectedIndexChanged(null, null);
                 Panel1.Visible = true;
                 break;
@@ -119,6 +119,7 @@ public partial class _Default : System.Web.UI.Page
         SubjectsDropDownList.DataSource = ds;
         SubjectsDropDownList.DataValueField = "subject";
         SubjectsDropDownList.DataBind();
+        SubjectsDropDownList.SelectedIndex = 0;
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
@@ -177,7 +178,7 @@ public partial class _Default : System.Web.UI.Page
     {   
         string uid = Session["uid"].ToString();
         con.Open();
-        cmd = new SqlCommand("select question,marks,subject from questions join subjects on subjects.subid=questions.subid where ismcq=0 and uid=@uid",con);
+        cmd = new SqlCommand("select qid,question,marks,subject from questions join subjects on subjects.subid=questions.subid where ismcq=0 and uid=@uid",con);
         cmd.Parameters.AddWithValue("@uid", uid);
         SqlDataAdapter da = new SqlDataAdapter(cmd);
         DataSet ds = new DataSet();
@@ -217,5 +218,72 @@ public partial class _Default : System.Web.UI.Page
         Branch.Text = branch;
         Semester.Text = semester;
         Session["subid"] = subid;
+    }
+
+    protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        GridView1.EditIndex = -1;
+        UpdateGridView();
+    }
+
+    protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        GridView1.EditIndex = e.NewEditIndex;
+        UpdateGridView();
+    }
+
+    protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        string uid = Session["uid"].ToString();
+        Label qid = GridView1.Rows[e.RowIndex].FindControl("lbl_qid2") as Label;
+        TextBox question = GridView1.Rows[e.RowIndex].FindControl("txt_question") as TextBox;
+        TextBox marks = GridView1.Rows[e.RowIndex].FindControl("txt_marks") as TextBox;
+        DropDownList subjects = GridView1.Rows[e.RowIndex].FindControl("SubjectsDropDownList2") as DropDownList;
+
+        con.Open();
+        SqlCommand cmd = new SqlCommand("update questions set question=@question, marks=@marks where qid=@qid", con);
+        cmd.Parameters.AddWithValue("@question", question.Text);
+        cmd.Parameters.AddWithValue("@marks", marks.Text);
+        cmd.Parameters.AddWithValue("@qid", qid.Text);
+        cmd.ExecuteNonQuery();
+        cmd = new SqlCommand("update questions set subid=@subid where qid=@qid", con);
+        cmd.Parameters.AddWithValue("@subid", GetSubjectId(subjects.SelectedValue));
+        cmd.Parameters.AddWithValue("@qid", qid.Text);
+        cmd.ExecuteNonQuery();
+        con.Close();
+        GridView1.EditIndex = -1;
+        UpdateGridView();
+    }
+
+    protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        GridView1.PageIndex = e.NewPageIndex;
+        UpdateGridView();
+    }
+
+    public string GetSubjectId(string subject)
+    {
+        con.Close();
+        con.Open();
+        SqlCommand cmd = new SqlCommand("select subid from subjects where subject=@subject", con);
+        cmd.Parameters.AddWithValue("@subject", subject);
+        reader = cmd.ExecuteReader();
+        reader.Read();
+        string subid=reader[0].ToString();
+        reader.Close();
+        return subid;
+    }
+
+    protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        string uid = Session["uid"].ToString();
+        Label qid = GridView1.Rows[e.RowIndex].FindControl("lbl_qid1") as Label;
+        con.Open();
+        SqlCommand cmd = new SqlCommand("delete from questions where qid=@qid", con);
+        cmd.Parameters.AddWithValue("@qid", qid.Text);
+        cmd.ExecuteNonQuery();
+        con.Close();
+        GridView1.EditIndex = -1;
+        UpdateGridView();
     }
 }
