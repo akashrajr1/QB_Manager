@@ -79,8 +79,7 @@
             AllowPaging="true" PageSize="2" OnPageIndexChanging="GridView1_PageIndexChanging" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" >
 
             <Columns>
-                <asp:TemplateField >  
-                    <HeaderStyle CssClass="hide" />
+                <asp:TemplateField HeaderStyle-CssClass="hide" ItemStyle-CssClass="hide">  
                     <ItemTemplate>  
                         <asp:Label ID="lbl_qid1" runat="server" Text='<%#Eval("qid") %>' Visible="false"></asp:Label>  
                     </ItemTemplate>  
@@ -116,10 +115,10 @@
                 </asp:TemplateField>  
                 <asp:TemplateField HeaderText="Subjects">  
                     <ItemTemplate>  
-                        <asp:Label ID="lbl_subject" runat="server" Text='<%#Eval("subject") %>'></asp:Label>  
+                        <asp:Label ID="lbl_subject1" runat="server" Text='<%#Eval("subject") %>'></asp:Label>  
                     </ItemTemplate>  
                     <EditItemTemplate>  
-                        <asp:Label ID="lbl_subject" runat="server" Text='<%#Eval("subject") %>'></asp:Label>  
+                        <asp:Label ID="lbl_subject2" runat="server" Text='<%#Eval("subject") %>'></asp:Label>  
 <%--                        <asp:DropDownList ID="SubjectsDropDownList2" runat="server" DataSourceID="SqlDataSource1" DataTextField="subject">
 
                         </asp:DropDownList>

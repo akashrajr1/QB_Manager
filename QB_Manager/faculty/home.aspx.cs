@@ -253,7 +253,9 @@ public partial class _Default : System.Web.UI.Page
         Label qid = GridView1.Rows[e.RowIndex].FindControl("lbl_qid2") as Label;
         TextBox question = GridView1.Rows[e.RowIndex].FindControl("txt_question") as TextBox;
         TextBox marks = GridView1.Rows[e.RowIndex].FindControl("txt_marks") as TextBox;
-        DropDownList subjects = GridView1.Rows[e.RowIndex].FindControl("SubjectsDropDownList2") as DropDownList;
+        Label subject = GridView1.Rows[e.RowIndex].FindControl("lbl_subject2") as Label;
+       // DropDownList subjects = GridView1.Rows[e.RowIndex].FindControl("SubjectsDropDownList2") as DropDownList;
+
 
         con.Open();
         SqlCommand cmd = new SqlCommand("update questions set question=@question, marks=@marks where qid=@qid", con);
@@ -263,7 +265,8 @@ public partial class _Default : System.Web.UI.Page
         cmd.ExecuteNonQuery();
 
         cmd = new SqlCommand("update questions set subid=@subid where qid=@qid", con);
-        cmd.Parameters.AddWithValue("@subid", GetSubjectId(subjects.SelectedValue));
+        cmd.Parameters.AddWithValue("@subid", GetSubjectId(subject.Text));
+        //cmd.Parameters.AddWithValue("@subid", GetSubjectId(subjects.SelectedValue));
         cmd.Parameters.AddWithValue("@qid", qid.Text);
         cmd.ExecuteNonQuery();
 
