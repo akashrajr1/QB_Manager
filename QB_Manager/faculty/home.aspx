@@ -76,7 +76,8 @@
         Questions:
         <br />
         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowEditing="GridView1_RowEditing" OnRowUpdating="GridView1_RowUpdating" OnRowDeleting="GridView1_RowDeleting"
-            AllowPaging="true" PageSize="2" OnPageIndexChanging="GridView1_PageIndexChanging" >
+            AllowPaging="true" PageSize="2" OnPageIndexChanging="GridView1_PageIndexChanging" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" >
+
             <Columns>
                 <asp:TemplateField >  
                     <HeaderStyle CssClass="hide" />
@@ -130,6 +131,7 @@
                     </EditItemTemplate>  
                 </asp:TemplateField>  
             </Columns>
+            <PagerSettings FirstPageText="First" LastPageText="Last" />
         </asp:GridView>
 
         <br />
