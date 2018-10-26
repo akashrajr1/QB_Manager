@@ -29,3 +29,7 @@ html, body {
     margin-left: 10% !important;
     margin-right: 10% !important;
 }
+
+.nullcol {
+    width: 105px;
+}

@@ -275,7 +275,7 @@ public partial class incharge_home : System.Web.UI.Page
             {
                 HiddenField hidden = (HiddenField)row.Cells[0].FindControl("HiddenField1");
                 string questionid = hidden.Value.ToString();
-                cmd = new SqlCommand("insert into PaperDb (paperid,questionid,subid) values(@paperid,@questionid,@subid)", con);
+                cmd = new SqlCommand("insert into PaperDb (paperid,questionid) values(@paperid,@questionid)", con);
                 cmd.Parameters.AddWithValue("@paperid", paperid);
                 cmd.Parameters.AddWithValue("@questionid", questionid);
                 cmd.ExecuteNonQuery();

@@ -87,7 +87,7 @@
                         <asp:Label ID="lbl_qid2" runat="server" Text='<%#Eval("qid") %>' Visible="false"></asp:Label>  
                     </EditItemTemplate>
                 </asp:TemplateField> 
-                <asp:TemplateField>
+                <asp:TemplateField HeaderStyle-CssClass="nullcol" ItemStyle-CssClass="nullcol">
                     <ItemTemplate>
                         <asp:Button ID="EditButton1" runat="server" Text="Edit" CommandName="Edit" />
                         <asp:Button ID="DeleteButton1" runat="server" Text="Delete" CommandName="Delete" OnClientClick="return confirm('Are you sure you want to Delete this question?')"/>
