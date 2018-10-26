@@ -207,7 +207,7 @@ public partial class _Default : System.Web.UI.Page
     {
         string uid = Session["uid"].ToString();
         con.Open();
-        cmd = new SqlCommand("select question,marks,optiona,optionb,optionc,optiond,subject from questions join subjects on subjects.subid=questions.subid where ismcq=1 and uid=@uid", con);
+        cmd = new SqlCommand("select qid,question,marks,optiona,optionb,optionc,optiond,subject from questions join subjects on subjects.subid=questions.subid where ismcq=1 and uid=@uid", con);
         cmd.Parameters.AddWithValue("@uid", uid);
         SqlDataAdapter da = new SqlDataAdapter(cmd);
         DataSet ds = new DataSet();
@@ -320,6 +320,91 @@ public partial class _Default : System.Web.UI.Page
     }
 
     protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+    }
+
+
+    protected void GridView2_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        GridView2.EditIndex = -1;
+        UpdateGridViewMcqs();
+    }
+
+    protected void GridView2_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        GridView2.EditIndex = e.NewEditIndex;
+        UpdateGridViewMcqs();
+    }
+
+    protected void GridView2_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        string uid = Session["uid"].ToString();
+        Label qid = GridView2.Rows[e.RowIndex].FindControl("lbl_qid2") as Label;
+        TextBox question = GridView2.Rows[e.RowIndex].FindControl("txt_question") as TextBox;
+        TextBox marks = GridView2.Rows[e.RowIndex].FindControl("txt_marks") as TextBox;
+        TextBox optiona = GridView2.Rows[e.RowIndex].FindControl("txt_optiona") as TextBox;
+        TextBox optionb = GridView2.Rows[e.RowIndex].FindControl("txt_optionb") as TextBox;
+        TextBox optionc = GridView2.Rows[e.RowIndex].FindControl("txt_optionc") as TextBox;
+        TextBox optiond = GridView2.Rows[e.RowIndex].FindControl("txt_optiond") as TextBox;
+        Label subject = GridView2.Rows[e.RowIndex].FindControl("lbl_subject2") as Label;
+        // DropDownList subjects = GridView2.Rows[e.RowIndex].FindControl("SubjectsDropDownList2") as DropDownList;
+
+
+        con.Open();
+        SqlCommand cmd = new SqlCommand("update questions set question=@question,optiona=@optiona,optionb=@optionb,optionc=@optionc,optiond=@optiond,marks=@marks where qid=@qid", con);
+        cmd.Parameters.AddWithValue("@question", question.Text);
+        cmd.Parameters.AddWithValue("@optiona", optiona.Text);
+        cmd.Parameters.AddWithValue("@optionb", optionb.Text);
+        cmd.Parameters.AddWithValue("@optionc", optionc.Text);
+        cmd.Parameters.AddWithValue("@optiond", optiond.Text);
+        cmd.Parameters.AddWithValue("@marks", marks.Text);
+        cmd.Parameters.AddWithValue("@qid", qid.Text);
+        cmd.ExecuteNonQuery();
+
+        cmd = new SqlCommand("update questions set subid=@subid where qid=@qid", con);
+        cmd.Parameters.AddWithValue("@subid", GetSubjectId(subject.Text));
+        //cmd.Parameters.AddWithValue("@subid", GetSubjectId(subjects.SelectedValue));
+        cmd.Parameters.AddWithValue("@qid", qid.Text);
+        cmd.ExecuteNonQuery();
+
+        con.Close();
+        GridView2.EditIndex = -1;
+        UpdateGridViewMcqs();
+    }
+
+    protected void GridView2_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        GridView2.PageIndex = e.NewPageIndex;
+        UpdateGridViewMcqs();
+    }
+
+    protected void GridView2_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        int flag = 0;
+        string uid = Session["uid"].ToString();
+        Label qid = GridView2.Rows[e.RowIndex].FindControl("lbl_qid1") as Label;
+        try
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("delete from questions where qid=@qid", con);
+
+            cmd.Parameters.AddWithValue("@qid", qid.Text);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        catch
+        {
+            flag = 1;
+            string username = Server.UrlDecode(Request.QueryString["Username"]);
+            Session["flag"] = flag;
+            Response.Redirect("home.aspx?Username=" + username);
+        }
+        GridView2.EditIndex = -1;
+        UpdateGridViewMcqs();
+    }
+
+    protected void GridView2_SelectedIndexChanged(object sender, EventArgs e)
     {
 
     }

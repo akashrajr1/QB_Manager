@@ -53,7 +53,7 @@
         Enter Marks: 
         <asp:TextBox ID="TextBox6" runat="server"></asp:TextBox>
         <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="TextBox6" ErrorMessage="You must Enter Marks!!"></asp:RequiredFieldValidator>
-        <asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="Enter a proper number!!" MinimumValue="1" Type="Integer" ControlToValidate="TextBox6" MaximumValue="100"></asp:RangeValidator>
+        <asp:RangeValidator ID="RangeValidator1" runat="server"  Display="Dynamic" ErrorMessage="Enter a proper number!!" MinimumValue="0.5" Type="Double" ControlToValidate="TextBox6" MaximumValue="100.0"></asp:RangeValidator>
         <br /> <br />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Submit" />
     </asp:Panel>
@@ -62,17 +62,96 @@
     <asp:Panel ID="Panel3" runat="server"  Visible="false" style="width:650px; margin: auto;background-color:rgba(192,192,192,0.7);padding:5px">
         MCQs:
         <br />
-        <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="false">
+        <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="false" OnRowCancelingEdit="GridView2_RowCancelingEdit" OnRowEditing="GridView2_RowEditing" OnRowUpdating="GridView2_RowUpdating" OnRowDeleting="GridView2_RowDeleting"
+            AllowPaging="true" PageSize="2" OnPageIndexChanging="GridView2_PageIndexChanging" OnSelectedIndexChanged="GridView2_SelectedIndexChanged" >
+
             <Columns>
-                <asp:BoundField DataField="question" HeaderText="Questions"/>
-                <asp:BoundField DataField="optiona" HeaderText="Option A"/>
-                <asp:BoundField DataField="optionb" HeaderText="Option B"/>
-                <asp:BoundField DataField="optionc" HeaderText="Option C"/>
-                <asp:BoundField DataField="optiond" HeaderText="Option D"/>
-                <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks"/>
-                <asp:BoundField DataField="subject" HeaderText="Subject" SortExpression="subject"/>
+                <asp:TemplateField HeaderStyle-CssClass="hide" ItemStyle-CssClass="hide">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_qid1" runat="server" Text='<%#Eval("qid") %>' Visible="false"></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:Label ID="lbl_qid2" runat="server" Text='<%#Eval("qid") %>' Visible="false"></asp:Label>  
+                    </EditItemTemplate>
+                </asp:TemplateField> 
+                <asp:TemplateField HeaderStyle-CssClass="nullcol" ItemStyle-CssClass="nullcol">
+                    <ItemTemplate>
+                        <asp:Button ID="EditButton1" runat="server" Text="Edit" CommandName="Edit" />
+                        <asp:Button ID="DeleteButton1" runat="server" Text="Delete" CommandName="Delete" OnClientClick="return confirm('Are you sure you want to Delete this question?')"/>
+                    </ItemTemplate>
+                    <EditItemTemplate>
+                        <asp:Button ID="UpdateButton1" runat="server" Text="Update" CommandName="Update" />
+                        <asp:Button ID="CancelButton1" runat="server" Text="Cancel" CommandName="Cancel" />
+                    </EditItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Questions">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_question" runat="server" Text='<%#Eval("question") %>' Wrap="true"></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:TextBox ID="txt_question" runat="server" Text='<%#Eval("question") %>' Wrap="true"></asp:TextBox>  
+                    </EditItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Option A">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_optiona" runat="server" Text='<%#Eval("optiona") %>' Wrap="true"></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:TextBox ID="txt_optiona" runat="server" Text='<%#Eval("optiona") %>' Wrap="true"></asp:TextBox>  
+                    </EditItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Option B">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_optionb" runat="server" Text='<%#Eval("optionb") %>' Wrap="true"></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:TextBox ID="txt_optionb" runat="server" Text='<%#Eval("optionb") %>' Wrap="true"></asp:TextBox>  
+                    </EditItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Option C">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_optionc" runat="server" Text='<%#Eval("optionc") %>' Wrap="true"></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:TextBox ID="txt_optionc" runat="server" Text='<%#Eval("optionc") %>' Wrap="true"></asp:TextBox>  
+                    </EditItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Option D">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_optiond" runat="server" Text='<%#Eval("optiond") %>' Wrap="true"></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:TextBox ID="txt_optiond" runat="server" Text='<%#Eval("optiond") %>' Wrap="true"></asp:TextBox>  
+                    </EditItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Marks">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_marks" runat="server" Text='<%#Eval("marks") %>'></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:TextBox ID="txt_marks" runat="server" Text='<%#Eval("marks") %>'></asp:TextBox>  
+                    </EditItemTemplate>  
+                </asp:TemplateField>  
+                <asp:TemplateField HeaderText="Subjects">  
+                    <ItemTemplate>  
+                        <asp:Label ID="lbl_subject1" runat="server" Text='<%#Eval("subject") %>'></asp:Label>  
+                    </ItemTemplate>  
+                    <EditItemTemplate>  
+                        <asp:Label ID="lbl_subject2" runat="server" Text='<%#Eval("subject") %>'></asp:Label>  
+<%--                        <asp:DropDownList ID="SubjectsDropDownList2" runat="server" DataSourceID="SqlDataSource1" DataTextField="subject">
+
+                        </asp:DropDownList>
+                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:QB_ManagerConnectionString %>" SelectCommand="select distinct subject from subjects join teaches on subjects.subid=teaches.subid where uid=@uid" >
+                             <SelectParameters>
+                                <asp:SessionParameter Name="uid" SessionField="uid"/>
+                            </SelectParameters>
+                        </asp:SqlDataSource>--%>
+                    </EditItemTemplate>  
+                </asp:TemplateField>  
             </Columns>
-        </asp:GridView> <br />
+            <PagerSettings FirstPageText="First" LastPageText="Last" />
+        </asp:GridView>
+        <br />
         Questions:
         <br />
         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowEditing="GridView1_RowEditing" OnRowUpdating="GridView1_RowUpdating" OnRowDeleting="GridView1_RowDeleting"
@@ -104,7 +183,7 @@
                     <EditItemTemplate>  
                         <asp:TextBox ID="txt_question" runat="server" Text='<%#Eval("question") %>' Wrap="true"></asp:TextBox>  
                     </EditItemTemplate>
-                </asp:TemplateField>  
+                </asp:TemplateField>                   
                 <asp:TemplateField HeaderText="Marks">  
                     <ItemTemplate>  
                         <asp:Label ID="lbl_marks" runat="server" Text='<%#Eval("marks") %>'></asp:Label>  
