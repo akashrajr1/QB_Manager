@@ -27,10 +27,23 @@ public partial class _Default : System.Web.UI.Page
                 Session["uid"] = cookie["uid"];
                 Session["role"] = cookie["role"];
             }
+
+            if (Session["flag"] != null)
+            {
+                int error = (int)Session["flag"];
+                if (error == 1)
+                    Alert.Generate(this, "Unable to delete as question exists as a part of a Question Paper. Please contact administrator");
+                error = 0;
+                Session["flag"] = error;
+            }
+
         }
         catch (UserNotFound err)
         {
             Response.Redirect("http://localhost:60561/404.aspx?Error=" + Server.UrlEncode(err.Message));
+        }
+        catch
+        {
         }
     }
 
@@ -177,6 +190,7 @@ public partial class _Default : System.Web.UI.Page
     public void UpdateGridView()
     {   
         string uid = Session["uid"].ToString();
+        con.Close();
         con.Open();
         cmd = new SqlCommand("select qid,question,marks,subject from questions join subjects on subjects.subid=questions.subid where ismcq=0 and uid=@uid",con);
         cmd.Parameters.AddWithValue("@uid", uid);
@@ -246,10 +260,12 @@ public partial class _Default : System.Web.UI.Page
         cmd.Parameters.AddWithValue("@marks", marks.Text);
         cmd.Parameters.AddWithValue("@qid", qid.Text);
         cmd.ExecuteNonQuery();
+
         cmd = new SqlCommand("update questions set subid=@subid where qid=@qid", con);
         cmd.Parameters.AddWithValue("@subid", GetSubjectId(subjects.SelectedValue));
         cmd.Parameters.AddWithValue("@qid", qid.Text);
         cmd.ExecuteNonQuery();
+
         con.Close();
         GridView1.EditIndex = -1;
         UpdateGridView();
@@ -276,13 +292,25 @@ public partial class _Default : System.Web.UI.Page
 
     protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
+        int flag = 0;
         string uid = Session["uid"].ToString();
         Label qid = GridView1.Rows[e.RowIndex].FindControl("lbl_qid1") as Label;
-        con.Open();
-        SqlCommand cmd = new SqlCommand("delete from questions where qid=@qid", con);
-        cmd.Parameters.AddWithValue("@qid", qid.Text);
-        cmd.ExecuteNonQuery();
-        con.Close();
+        try
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("delete from questions where qid=@qid", con);
+
+            cmd.Parameters.AddWithValue("@qid", qid.Text);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        catch
+        {
+            flag = 1;
+            string username = Server.UrlDecode(Request.QueryString["Username"]);
+            Session["flag"] = flag;
+            Response.Redirect("home.aspx?Username=" + username);
+        }
         GridView1.EditIndex = -1;
         UpdateGridView();
     }

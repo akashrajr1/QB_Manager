@@ -90,7 +90,7 @@
                 <asp:TemplateField>
                     <ItemTemplate>
                         <asp:Button ID="EditButton1" runat="server" Text="Edit" CommandName="Edit" />
-                        <asp:Button ID="DeleteButton1" runat="server" Text="Delete" CommandName="Delete" OnClientClick="return confirm('Are you sure you want to Delete this user?')"/>
+                        <asp:Button ID="DeleteButton1" runat="server" Text="Delete" CommandName="Delete" OnClientClick="return confirm('Are you sure you want to Delete this question?')"/>
                     </ItemTemplate>
                     <EditItemTemplate>
                         <asp:Button ID="UpdateButton1" runat="server" Text="Update" CommandName="Update" />
@@ -118,14 +118,15 @@
                         <asp:Label ID="lbl_subject" runat="server" Text='<%#Eval("subject") %>'></asp:Label>  
                     </ItemTemplate>  
                     <EditItemTemplate>  
-                        <asp:DropDownList ID="SubjectsDropDownList2" runat="server" DataSourceID="SqlDataSource1" DataTextField="subject">
+                        <asp:Label ID="lbl_subject" runat="server" Text='<%#Eval("subject") %>'></asp:Label>  
+<%--                        <asp:DropDownList ID="SubjectsDropDownList2" runat="server" DataSourceID="SqlDataSource1" DataTextField="subject">
 
                         </asp:DropDownList>
                         <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:QB_ManagerConnectionString %>" SelectCommand="select distinct subject from subjects join teaches on subjects.subid=teaches.subid where uid=@uid" >
                              <SelectParameters>
                                 <asp:SessionParameter Name="uid" SessionField="uid"/>
                             </SelectParameters>
-                        </asp:SqlDataSource>
+                        </asp:SqlDataSource>--%>
                     </EditItemTemplate>  
                 </asp:TemplateField>  
             </Columns>
