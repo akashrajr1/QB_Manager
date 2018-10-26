@@ -32,6 +32,7 @@ public partial class _Default : System.Web.UI.Page
         {
             Response.Redirect("http://localhost:60561/404.aspx?Error=" + Server.UrlEncode(err.Message));
         }
+        GridView1.PageSize = 4;
     }
 
     public void SetToFalse()
@@ -285,5 +286,10 @@ public partial class _Default : System.Web.UI.Page
         con.Close();
         GridView1.EditIndex = -1;
         UpdateGridView();
+    }
+
+    protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
     }
 }

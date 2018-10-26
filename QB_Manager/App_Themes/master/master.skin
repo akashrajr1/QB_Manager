@@ -7,4 +7,4 @@
 
 <asp:RadioButtonList  runat="server"  BorderColor="OrangeRed" BorderStyle="Double" />
 
-<asp:Button runat="server" ForeColor="Black" BackColor="#4682B4" Font-Bold="True" BorderColor="#6A93D4" BorderWidth="2px" Width="75px" Height="28px"/>
+<asp:Button runat="server" ForeColor="Black" BackColor="#4682B4" Font-Bold="True" BorderColor="#6A93D4" BorderWidth="2px" Height="28px"/>
