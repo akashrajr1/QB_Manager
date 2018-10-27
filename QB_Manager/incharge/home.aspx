@@ -22,7 +22,7 @@
         <br />
         <br />
         MCQs:<br />
-        <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False">
+        <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"  AllowPaging="true" PageSize="2" OnPageIndexChanging="GridView1_PageIndexChanging">
             <Columns>
                 <asp:TemplateField HeaderText="Select">
                     <ItemTemplate>
@@ -37,9 +37,10 @@
                 <asp:BoundField DataField="optiond" HeaderText="Option D" SortExpression="optiond" />
                 <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks" />
             </Columns>
+            <PagerSettings FirstPageText="First" LastPageText="Last" />
         </asp:GridView> <br />
         Questions:<br />
-        <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="false">
+        <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="2" OnPageIndexChanging="GridView2_PageIndexChanging">
             <Columns>
                 <asp:TemplateField HeaderText="Select">
                     <ItemTemplate>
@@ -50,6 +51,7 @@
                 <asp:BoundField DataField="question" HeaderText="Questions" SortExpression="question" />
                 <asp:BoundField DataField="marks" HeaderText="Marks" SortExpression="marks" />
             </Columns>
+            <PagerSettings FirstPageText="First" LastPageText="Last" />
         </asp:GridView> <br />
         <asp:Button ID="Button1" runat="server" Text="Save Selection" OnClick="SaveCheckBoxState"/>
     </asp:Panel>

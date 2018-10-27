@@ -32,6 +32,8 @@ public partial class incharge_home : System.Web.UI.Page
         {
             Response.Redirect("http://localhost:60561/404.aspx?Error=" + Server.UrlEncode(err.Message));
         }
+        GridView1.PageSize = 4;
+        GridView2.PageSize = 4;
     }
 
     public void SetToFalse()
@@ -163,6 +165,23 @@ public partial class incharge_home : System.Web.UI.Page
 
         Session["subject"] = SubjectDropDownList.SelectedValue;
     }
+
+    protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        GridView1.PageIndex = e.NewPageIndex;
+        UpdateGridViewMcqs();
+        
+    }
+
+    protected void GridView2_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        GridView2.PageIndex = e.NewPageIndex;
+        UpdateGridView();
+    }
+
+  
+  
+
 
     public string GeneratePaper()
     {

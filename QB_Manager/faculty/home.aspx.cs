@@ -45,7 +45,8 @@ public partial class _Default : System.Web.UI.Page
         catch
         {
         }
-        GridView1.PageSize = 4;
+        GridView1.PageSize = 3;
+        GridView2.PageSize = 2;
     }
 
     public void SetToFalse()
