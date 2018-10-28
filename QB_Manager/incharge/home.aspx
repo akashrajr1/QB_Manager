@@ -44,7 +44,7 @@
             <Columns>
                 <asp:TemplateField HeaderText="Select">
                     <ItemTemplate>
-                        <asp:CheckBox ID="CheckBox2" runat="server" />
+                        <asp:CheckBox ID="CheckBox1" runat="server" />
                         <asp:HiddenField ID="HiddenField1" runat="server" Value='<%#Eval("qid")%>'/>
                     </ItemTemplate>
                 </asp:TemplateField>
@@ -53,7 +53,7 @@
             </Columns>
             <PagerSettings FirstPageText="First" LastPageText="Last" />
         </asp:GridView> <br />
-        <asp:Button ID="Button1" runat="server" Text="Save Selection" OnClick="SaveCheckBoxState"/>
+        <asp:Button ID="Button1" runat="server" Text="Save Selection" OnClick="SaveSelection"/>
     </asp:Panel>
 
         </div>

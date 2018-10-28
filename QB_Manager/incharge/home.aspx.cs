@@ -11,6 +11,7 @@ using System.Web.Configuration;
 using Enums;
 using Exceptions;
 using Methods;
+using System.Diagnostics;
 
 public partial class incharge_home : System.Web.UI.Page
 {
@@ -26,6 +27,7 @@ public partial class incharge_home : System.Web.UI.Page
             {
                 Session["uid"] = cookie["uid"];
                 Session["role"] = cookie["role"];
+                Session["subject"] = SubjectDropDownList.SelectedValue;
             }
         }
         catch (UserNotFound err)
@@ -49,14 +51,21 @@ public partial class incharge_home : System.Web.UI.Page
         switch ((InChargePower)RadioButtonList1.SelectedIndex)
         {
             case InChargePower.ChooseFinalQuestions:
+                if(SubjectDropDownList.Items.Count==1)
+                    Session["subject"] = SubjectDropDownList.SelectedItem.Value;
+                else
+                    Session["subject"] = SubjectDropDownList.SelectedValue;
+
                 PopulateSubjects();
                 UpdateGridViewMcqs();
                 UpdateGridView();
-                SetCheckBoxes();
+                PopulateList1();
+                PopulateList2();
                 Panel1.Visible = true;
                 break;
             case InChargePower.ViewQuestionPaper:
-                SaveCheckBoxState(null,null);
+                SaveList1();
+                SaveList2();
                 GeneratePaper();
                 OutsidePanel.Visible = true;
                 Panel2.Visible = true;
@@ -70,6 +79,7 @@ public partial class incharge_home : System.Web.UI.Page
 
     public void UpdateGridViewMcqs()
     {
+        con.Close();
         con.Open();
         cmd = new SqlCommand("select question,marks,optiona,optionb,optionc,optiond,qid from questions join subjects on questions.subid=subjects.subid where ismcq=1 and subject=@subject order by marks asc", con);
         cmd.Parameters.AddWithValue("@subject", SubjectDropDownList.SelectedValue);
@@ -94,142 +104,179 @@ public partial class incharge_home : System.Web.UI.Page
         GridView2.DataBind();
     }
 
-    public void SetCheckBoxes()
-    {
-        string code1 = (string) Session["code1"];
-        string code2 = (string) Session["code2"];
-        int i = 0;
-
-
-        try
-        {
-            if (code1 == null || code2 == null) ;
-            else
-            {
-                i = 0;
-                foreach (GridViewRow row in GridView1.Rows)
-                {
-                    CheckBox box = (CheckBox)row.Cells[0].FindControl("CheckBox1");
-                    if (code1[i].Equals('1'))
-                        box.Checked = true;
-                    i++;
-                }
-                i = 0;
-                foreach (GridViewRow row in GridView2.Rows)
-                {
-                    CheckBox box = (CheckBox)row.Cells[0].FindControl("CheckBox2");
-                    if (code2[i].Equals('1'))
-                        box.Checked = true;
-                    i++;
-                }
-            }
-        }
-        catch(Exception err)
-        {
-        }
-
-    }
-
-    protected void SaveCheckBoxState(object sender, EventArgs e)
-    {
-        string code1 = "";
-        string code2 = "";
-        foreach (GridViewRow row in GridView1.Rows)
-        {
-                CheckBox box = (CheckBox) row.Cells[0].FindControl("CheckBox1");
-                if (box.Checked)
-                    code1 += "1";
-                else
-                    code1 += "0";
-        }
-        foreach (GridViewRow row in GridView2.Rows)
-        {
-            CheckBox box = (CheckBox)row.Cells[0].FindControl("CheckBox2");
-            if (box.Checked)
-                code2 += "1";
-            else
-                code2 += "0";
-        }
-        Session["code1"] = code1;
-        Session["code2"] = code2;
-
-        Button button = (Button)sender;
-        if (button != null)
-        {
-            Alert.Generate(this, "Questions Paper Generated!!");
-            HttpCookie cookie = Request.Cookies["userdata"];
-            cookie["code1"] = code1;
-            cookie["code2"] = code2;
-            Response.SetCookie(cookie);
-        }
-
-        Session["subject"] = SubjectDropDownList.SelectedValue;
-    }
-
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
+        SaveList1();
         GridView1.PageIndex = e.NewPageIndex;
         UpdateGridViewMcqs();
-        
+        PopulateList1();
+    }
+
+    private void PersistRowIndex1(int index)
+    {
+        if (!SelectedList1.Exists(i => i == index))
+            SelectedList1.Add(index);
+    }
+
+    private void RemoveRowIndex1(int index)
+    {
+        if (SelectedList1.Exists(i => i == index))
+            SelectedList1.Remove(index);
+    }
+
+    public List<Int32> SelectedList1
+    {
+        get
+        {
+            if (Session["List1"] == null)
+                Session["List1"] = new List<Int32>();
+            return (List<Int32>)Session["List1"];
+        }
+    }
+
+    private void PopulateList1()
+    {
+        foreach (GridViewRow row in GridView1.Rows)
+        {
+            CheckBox checkBox = row.FindControl("CheckBox1") as CheckBox;
+            IDataItemContainer container = checkBox.NamingContainer as IDataItemContainer;
+            if (SelectedList1 != null)
+                if (SelectedList1.Exists(i => i == container.DataItemIndex))
+                    checkBox.Checked = true;
+        }
+
+    }
+
+    private void SaveList1()
+    {
+        foreach (GridViewRow row in GridView1.Rows)
+        {
+            CheckBox checkBox = row.FindControl("CheckBox1") as CheckBox;
+            IDataItemContainer container = checkBox.NamingContainer as IDataItemContainer;
+            if (checkBox.Checked)
+                PersistRowIndex1(container.DataItemIndex);
+            else
+                RemoveRowIndex1(container.DataItemIndex);
+        }
     }
 
     protected void GridView2_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
+        SaveList2();
         GridView2.PageIndex = e.NewPageIndex;
         UpdateGridView();
+        PopulateList2();
     }
 
-  
-  
+    public List<Int32> SelectedList2
+    {
+        get
+        {
+            if (Session["List2"] == null)
+                Session["List2"] = new List<Int32>();
+            return (List<Int32>)Session["List2"];
+        }
+    }
 
+    private void PersistRowIndex2(int index)
+    {
+        if (!SelectedList2.Exists(i => i == index))
+            SelectedList2.Add(index);
+    }
+
+    private void RemoveRowIndex2(int index)
+    {
+        if (SelectedList2.Exists(i => i == index))
+            SelectedList2.Remove(index);
+    }
+
+    private void PopulateList2()
+    {
+        foreach (GridViewRow row in GridView2.Rows)
+        {
+            CheckBox checkBox = row.FindControl("CheckBox1") as CheckBox;
+            IDataItemContainer container = checkBox.NamingContainer as IDataItemContainer;
+            if (SelectedList2 != null)
+                if (SelectedList2.Exists(i => i == container.DataItemIndex))
+                    checkBox.Checked = true;
+        }
+
+    }
+
+    private void SaveList2()
+    {
+        foreach (GridViewRow row in GridView2.Rows)
+        {
+            CheckBox checkBox = row.FindControl("CheckBox1") as CheckBox;
+            IDataItemContainer container = checkBox.NamingContainer as IDataItemContainer;
+            if (checkBox.Checked)
+                PersistRowIndex2(container.DataItemIndex);
+            else
+                RemoveRowIndex2(container.DataItemIndex);
+        }
+    }
 
     public string GeneratePaper()
     {
-        int mcqCount = GridView1.Rows.Count;
+        
+
         HttpCookie cookie = Request.Cookies["userdata"];
         string questions = "";
-        string code1 = cookie["code1"];
-        if (code1 == null) return questions;
 
         Subject.Text = Session["subject"].ToString();
         Branch.Text = GetData(0);
         Semester.Text = GetData(1);
 
-        questions += "<div style='margin-left: 20px;'><b>Select the correct MCQs</b><br><br>";
         int rowIndex = 0, count=1;
-        foreach (GridViewRow row in GridView1.Rows)
+        if (Session["CurrentList1"] != null)
         {
-            if (code1[rowIndex].Equals('1'))
+            questions += "<div style='margin-left: 20px;'><b>Select the correct MCQs</b><br><br>";
+
+            List<Int32> CurrentList1 = (List<Int32>) Session["CurrentList1"];
+            GridView1.AllowPaging = false;
+            UpdateGridViewMcqs();
+            foreach (GridViewRow row in GridView1.Rows)
             {
-                string sno = count.ToString() + ". ";
-                string question = row.Cells[1].Text;
-                string optiona = row.Cells[2].Text;
-                string optionb = row.Cells[3].Text;
-                string optionc = row.Cells[4].Text;
-                string optiond = row.Cells[5].Text;
-                string marks = row.Cells[6].Text;
-                questions += sno + "  " + question + "<br>a. " + optiona + "<br>b. " + optionb + "<br>c. " + optionc + "<br>d. " + optiond + "<br>(" + marks + ")<br><br>";
-                count++;
+                if (CurrentList1.Exists(i => i == row.DataItemIndex))
+                {
+                    string sno = count.ToString() + ". ";
+                    string question = row.Cells[1].Text;
+                    string optiona = row.Cells[2].Text;
+                    string optionb = row.Cells[3].Text;
+                    string optionc = row.Cells[4].Text;
+                    string optiond = row.Cells[5].Text;
+                    string marks = row.Cells[6].Text;
+                    questions += sno + "  " + question + "<br>a. " + optiona + "<br>b. " + optionb + "<br>c. " + optionc + "<br>d. " + optiond + "<br>(" + marks + ")<br><br>";
+                    count++;
+                }
+                rowIndex++;
             }
-            rowIndex++;
+            UpdateGridViewMcqs();
+            GridView1.AllowPaging = true;
         }
 
-        string code2 = cookie["code2"];
-        if (code2 == null) return questions += "</div>";
-
-        questions += "<b>Answer in brief</b><br><br>";
-        rowIndex = 0; count = 1;
-        foreach (GridViewRow row in GridView2.Rows)
+        if (Session["CurrentList2"] != null)
         {
-            if (code2[rowIndex].Equals('1'))
+            questions += "<b>Answer in brief</b><br><br>";
+            rowIndex = 0; count = 1;
+
+            List<Int32> CurrentList2 = (List<Int32>)Session["CurrentList2"];
+            GridView2.AllowPaging = false;
+            UpdateGridView();
+            foreach (GridViewRow row in GridView2.Rows)
             {
-                string sno = count.ToString() + ". ";
-                string question = row.Cells[1].Text;
-                string marks = row.Cells[2].Text;
-                questions += sno + "  " + question +"<br>(" + marks + ")<br><br>";
-                count++;
+                if (CurrentList2.Exists(i => i == row.DataItemIndex))
+                {
+                    string sno = count.ToString() + ". ";
+                    string question = row.Cells[1].Text;
+                    string marks = row.Cells[2].Text;
+                    questions += sno + "  " + question + "<br>(" + marks + ")<br><br>";
+                    count++;
+                }
+                rowIndex++;
             }
-            rowIndex++;
+            UpdateGridView();
+            GridView2.AllowPaging = true;
         }
 
         questions += "</div>";
@@ -251,6 +298,7 @@ public partial class incharge_home : System.Web.UI.Page
 
     protected void SubjectDropDownList_SelectedIndexChanged(object sender, EventArgs e)
     {
+        Session["subject"] = SubjectDropDownList.SelectedValue;
         UpdateGridViewMcqs();
         UpdateGridView();
     }
@@ -282,37 +330,70 @@ public partial class incharge_home : System.Web.UI.Page
 
     protected void Button2_Click(object sender, EventArgs e)
     {
+        if (Session["CurrentList1"] == null && Session["CurrentList2"] == null) return;
+
         string uid = Session["uid"].ToString();
         string subid = GetData(2);
         cmd = new SqlCommand("insert into Papers (subid) output inserted.paperid values(@subid)", con);
         cmd.Parameters.AddWithValue("@subid", subid);
         int paperid = (int)cmd.ExecuteScalar();
-        foreach(GridViewRow row in GridView1.Rows)
+
+        GridView1.AllowPaging = false;
+        UpdateGridViewMcqs();
+        if (Session["CurrentList1"] != null)
         {
-            CheckBox box = (CheckBox)row.Cells[0].FindControl("CheckBox1");
-            if (box.Checked)
+            List<Int32> CurrentList1 = (List<Int32>)Session["CurrentList1"];
+
+            foreach (GridViewRow row in GridView1.Rows)
             {
-                HiddenField hidden = (HiddenField)row.Cells[0].FindControl("HiddenField1");
-                string questionid = hidden.Value.ToString();
-                cmd = new SqlCommand("insert into PaperDb (paperid,questionid) values(@paperid,@questionid)", con);
-                cmd.Parameters.AddWithValue("@paperid", paperid);
-                cmd.Parameters.AddWithValue("@questionid", questionid);
-                cmd.ExecuteNonQuery();
+                if (CurrentList1.Exists(i => i == row.DataItemIndex))
+                {
+                    HiddenField hidden = (HiddenField)row.Cells[0].FindControl("HiddenField1");
+                    string questionid = hidden.Value.ToString();
+                    con.Open();
+                    cmd = new SqlCommand("insert into PaperDb (paperid,questionid) values(@paperid,@questionid)", con);
+                    cmd.Parameters.AddWithValue("@paperid", paperid);
+                    cmd.Parameters.AddWithValue("@questionid", questionid);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+
+        }
+        UpdateGridViewMcqs();
+        GridView1.AllowPaging = false;
+
+        GridView2.AllowPaging = false;
+        UpdateGridView();
+        if (Session["CurrentList2"] != null)
+        {
+            List<Int32> CurrentList2 = (List<Int32>)Session["CurrentList2"];
+            foreach (GridViewRow row in GridView2.Rows)
+            {
+                if (CurrentList2.Exists(i => i == row.DataItemIndex))
+                {
+                    HiddenField hidden = (HiddenField)row.Cells[0].FindControl("HiddenField1");
+                    string questionid = hidden.Value.ToString();
+                    con.Open();
+                    cmd = new SqlCommand("insert into PaperDb (paperid,questionid) values(@paperid,@questionid)", con);
+                    cmd.Parameters.AddWithValue("@paperid", paperid);
+                    cmd.Parameters.AddWithValue("@questionid", questionid);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
             }
         }
-        foreach (GridViewRow row in GridView2.Rows)
-        {
-            CheckBox box = (CheckBox)row.Cells[0].FindControl("CheckBox2");
-            if (box.Checked)
-            {
-                HiddenField hidden = (HiddenField)row.Cells[0].FindControl("HiddenField1");
-                string questionid = hidden.Value.ToString();
-                cmd = new SqlCommand("insert into PaperDb (paperid,questionid) values(@paperid,@questionid)", con);
-                cmd.Parameters.AddWithValue("@paperid", paperid);
-                cmd.Parameters.AddWithValue("@questionid", questionid);
-                cmd.ExecuteNonQuery();
-            }
-        }
+        UpdateGridView();
+        GridView2.AllowPaging = false;
+        con.Close();
         Alert.Generate(this, "Question Paper is Saved");
+    }
+
+    protected void SaveSelection(object sender, EventArgs e)
+    {
+        SaveList1();
+        SaveList2();
+        Session["CurrentList1"] = new List<Int32>((List<Int32>)Session["List1"]);
+        Session["CurrentList2"] = new List<Int32>((List<Int32>)Session["List2"]);
     }
 }

@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 
-<html  xmlns="http://www.w3.org/1999/xhtml" style="background-image: url(/images/mit.jpg); background-repeat:no-repeat;background-size:cover;background-position: center;height: 100%;" >
+<html  xmlns="http://www.w3.org/1999/xhtml" style="background-image: url(/images/mit.jpg); background-repeat:no-repeat;background-size:cover;background-position: center;height: 100%;background-attachment: fixed;" >
 <head runat="server">
     <title></title>
     <style type="text/css">
